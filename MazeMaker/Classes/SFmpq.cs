@@ -419,7 +419,7 @@ namespace MazeMaker.Classes
         //    szFileName(259) As Byte
         //End Type
 
-        public struct FILELISTENTRY
+        public struct FILELISTENTRY //change to Int , to list files 
         {
             public static long dwFileExists;
             public static long lcLocale;
@@ -431,12 +431,13 @@ namespace MazeMaker.Classes
 
         //' Storm functions implemented by this library
         //Declare Function SFileOpenArchive Lib "SFmpq.dll" (ByVal lpFileName As String, ByVal dwPriority As Long, ByVal dwFlags As Long, ByRef hMPQ As Long) As Boolean
-        [DllImport("SFmpq.dll")]
-        public static extern bool SFileOpenArchive(string lpFileName,long dwPriority,long dwFlags,long hMPQ);//byRef hMPQ?
+        [DllImport("SFmpq.dll", CharSet = CharSet.Unicode)]
+        public static extern bool SFileOpenArchive(
+            [MarshalAs(UnmanagedType.LPStr)]  string lpFileName,int dwPriority, int dwFlags, ref int hMPQ);//byRef hMPQ?
 
         //Declare Function SFileCloseArchive Lib "SFmpq.dll" (ByVal hMPQ As Long) As Boolean
-        [DllImport("SFmpq.dll")]
-        public static extern bool SFileCloseArchive(long hMPQ);//byval hMPQ?
+        [DllImport("SFmpq.dll", CharSet = CharSet.Unicode)]
+        public static extern bool SFileCloseArchive(int hMPQ);//byval hMPQ?
 
         //Declare Function SFileOpenFileAsArchive Lib "SFmpq.dll" (ByVal hSourceMPQ As Long, ByVal lpFileName As String, ByVal dwPriority As Long, ByVal dwFlags As Long, ByRef hMPQ As Long) As Boolean
         [DllImport("SFmpq.dll")]

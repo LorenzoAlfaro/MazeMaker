@@ -20,7 +20,15 @@ namespace MazeMaker
 
         private void button1_Click(object sender, EventArgs e)
         {
-            MazeMaker.Classes.SFmpq.AboutSFMpq();
+            //MazeMaker.Classes.SFmpq.AboutSFMpq();
+
+            //string version = Classes.SFmpq.MpqGetVersionString();
+
+            int hMPQ = 0;
+            bool success = Classes.SFmpq.SFileOpenArchive(@"C:\Users\Lorenzo\Dropbox\VIDEO GAMES\SC MAPS\Maze.scm", 0, 0, ref hMPQ);
+
+            bool close = Classes.SFmpq.SFileCloseArchive(hMPQ);
+
         }
     }
 }
