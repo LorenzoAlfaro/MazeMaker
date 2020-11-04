@@ -90,15 +90,6 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
-    <COMReference Include="Project1">
-      <Guid>{76DA072B-01E6-47A4-9821-D62C69774434}</Guid>
-      <VersionMajor>11</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
     <COMReference Include="VB6BackendDLL">
       <Guid>{04116D4C-B4A7-467F-B3DD-1A8B0EA21B69}</Guid>
       <VersionMajor>1</VersionMajor>

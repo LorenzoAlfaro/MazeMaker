@@ -8,7 +8,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Project1;
 using VB6Wrapper;
 using VB6BackendDLL;
 
@@ -19,15 +18,18 @@ namespace MazeMaker
     {
         [DllImport("Called.dll", CharSet = CharSet.Unicode) ]
         public static extern string FunctionCalled(
-            [MarshalAs(UnmanagedType.LPStr)]  string input);
+            [MarshalAs(UnmanagedType.BStr)]  string input); //LPWstr return first three letters 
+        //AnsBStr gets "敨汬o"
+        //LPTStr gets "hel"
+        //BStr gets "hello"
+        //TBStr gets "hello"
 
         [DllImport("Called.dll", CharSet = CharSet.Unicode)]
         public static extern string FunctionCalled2(
-           [MarshalAs(UnmanagedType.LPStr)] string input);
+           [MarshalAs(UnmanagedType.AnsiBStr)] string input);
 
 
-        [DllImport("Called.dll", CharSet = CharSet.Unicode)]
-        public static extern string GetAString(int index);
+       
 
         string mazePath = Environment.ExpandEnvironmentVariables(@"C:\Users\%USERNAME%\Dropbox\VIDEO GAMES\SC MAPS\Maze.scm");
 
@@ -39,7 +41,10 @@ namespace MazeMaker
 
         private void button1_Click(object sender, EventArgs e)
         {
-            BackendDLL whirlwind = new BackendDLL();
+            string hello = FunctionCalled2("hello");
+
+
+             BackendDLL whirlwind = new BackendDLL();
 
             bool sucesssss = whirlwind.updateServiceTotals(false, "6789", "2462", "string");
             
@@ -48,7 +53,7 @@ namespace MazeMaker
 
             //string version = Classes.SFmpq.MpqGetVersionString();
             string value = "dfdf";
-            Class1 vb6 = new Class1();
+            
 
 
             Wrapper wrapperClass = new Wrapper();
@@ -57,7 +62,7 @@ namespace MazeMaker
 
             bool success = wrapperClass.ExportFile(mazePath, files.Item(2), extractPath);
 
-            value = vb6.ModuleFun("str");
+            //value = vb6.ModuleFun("str");
             
             //value = GetAString( 0);
 
