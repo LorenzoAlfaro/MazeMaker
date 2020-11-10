@@ -90,17 +90,8 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
-    <COMReference Include="VB6BackendDLL">
-      <Guid>{04116D4C-B4A7-467F-B3DD-1A8B0EA21B69}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
     <COMReference Include="VB6Wrapper">
-      <Guid>{094E6BF6-2AD2-40C9-8018-A7F980748E6C}</Guid>
+      <Guid>{B25BCBF9-6880-40D5-A5D7-7657C1D6975B}</Guid>
       <VersionMajor>1</VersionMajor>
       <VersionMinor>0</VersionMinor>
       <Lcid>0</Lcid>
