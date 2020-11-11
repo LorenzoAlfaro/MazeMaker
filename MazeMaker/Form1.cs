@@ -5,7 +5,7 @@ using System.Windows.Forms;
 //using VB6BackendDLL;
 using System.ComponentModel.Design;
 using VB6Wrapper;
-
+using System.Drawing;
 
 namespace MazeMaker
 {
@@ -33,11 +33,20 @@ namespace MazeMaker
         string mazePath = Environment.ExpandEnvironmentVariables(@"C:\Users\%USERNAME%\Dropbox\VIDEO GAMES\SC MAPS\MPQExport\Maze.scm");
 
         string extractPath = Environment.ExpandEnvironmentVariables(@"C:\Users\%USERNAME%\Dropbox\VIDEO GAMES\SC MAPS\MPQExport");
+
+        private ByteViewer byteviewer;
         public Form1()
         {           
             
             wrapperClass = new Wrapper();
             InitializeComponent();
+
+            byteviewer = new ByteViewer();
+            byteviewer.Location = new Point(8, 46);
+            byteviewer.Size = new Size(600, 338);
+            byteviewer.Anchor = AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Top;
+            byteviewer.SetBytes(new byte[] { });
+            this.Controls.Add(byteviewer);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -91,6 +100,15 @@ namespace MazeMaker
             //import
             
             wrapperClass.ImportFile(mazePath,"");
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            if (ofd.ShowDialog() != DialogResult.OK)
+                return;
+
+            byteviewer.SetFile(ofd.FileName);
         }
     }
 }
