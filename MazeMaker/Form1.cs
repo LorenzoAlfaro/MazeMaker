@@ -6,6 +6,8 @@ using System.Windows.Forms;
 using System.ComponentModel.Design;
 using VB6Wrapper;
 using System.Drawing;
+using System.Linq;
+using System.IO;
 
 namespace MazeMaker
 {
@@ -109,6 +111,43 @@ namespace MazeMaker
                 return;
 
             byteviewer.SetFile(ofd.FileName);
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            if (ofd.ShowDialog() != DialogResult.OK)
+                return;
+
+            string hexString = "03440344034403440344034403440344034403440344034403440344034403440344034403440344034403440344034403440344034403440344034403440344";
+
+            bool success = ByteArrayToFile(ofd.FileName, StringToByteArray(hexString));
+
+
+        }
+        public bool ByteArrayToFile(string fileName, byte[] byteArray)
+        {
+            try
+            {
+                using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Write))
+                {
+                    fs.Seek(0x04A1, SeekOrigin.Begin);
+                    fs.Write(byteArray, 0, byteArray.Length); //04A1 = 1185
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception caught in process: {0}", ex);
+                return false;
+            }
+        }
+        public static byte[] StringToByteArray(string hex)
+        {
+            return Enumerable.Range(0, hex.Length)
+                             .Where(x => x % 2 == 0)
+                             .Select(x => Convert.ToByte(hex.Substring(x, 2), 16))
+                             .ToArray();
         }
     }
 }
