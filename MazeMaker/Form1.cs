@@ -119,19 +119,24 @@ namespace MazeMaker
             if (ofd.ShowDialog() != DialogResult.OK)
                 return;
 
-            string hexString = "03440344034403440344034403440344034403440344034403440344034403440344034403440344034403440344034403440344034403440344034403440344";
+            //string hexString = "44004400440044004400440044004400";
+            string hexString = "66036603660366036603660366036603";
+            string hexStringEnd = "44004400440044004400440026006603";
 
-            bool success = ByteArrayToFile(ofd.FileName, StringToByteArray(hexString));
+            string row = hexString + hexString + hexString + hexString + hexString + hexString + hexString + hexStringEnd;
+
+            bool success = ByteArrayToFile(ofd.FileName, StringToByteArray(row), 0x04A2);//MTXM broodwar reads
+             success = ByteArrayToFile(ofd.FileName, StringToByteArray(row), 0x24AA);//TILE staredit
 
 
         }
-        public bool ByteArrayToFile(string fileName, byte[] byteArray)
+        public bool ByteArrayToFile(string fileName, byte[] byteArray, long offset)
         {
             try
             {
                 using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Write))
                 {
-                    fs.Seek(0x04A1, SeekOrigin.Begin);
+                    fs.Seek(offset, SeekOrigin.Begin);// 0x04A2
                     fs.Write(byteArray, 0, byteArray.Length); //04A1 = 1185
                     return true;
                 }
