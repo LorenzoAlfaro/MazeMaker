@@ -22,8 +22,7 @@ namespace MazeMaker
         Wrapper wrapperClass;
 
         [DllImport("Called.dll", CharSet = CharSet.Unicode) ]
-        public static extern string FunctionCalled(
-            [MarshalAs(UnmanagedType.BStr)]  string input); //LPWstr return first three letters 
+        public static extern string FunctionCalled([MarshalAs(UnmanagedType.BStr)]  string input); //LPWstr return first three letters 
         //AnsBStr gets "敨汬o"
         //LPTStr gets "hel"
         //BStr gets "hello"
@@ -31,12 +30,8 @@ namespace MazeMaker
         //AnsiBStr gets "hello"
 
         [DllImport("Called.dll", CharSet = CharSet.Unicode)]
-        public static extern string FunctionCalled2(
-           [MarshalAs(UnmanagedType.AnsiBStr)] string input);
-
-
+        public static extern string FunctionCalled2([MarshalAs(UnmanagedType.AnsiBStr)] string input);
        
-
         string mazePath = Environment.ExpandEnvironmentVariables(@"C:\Users\%USERNAME%\Dropbox\VIDEO GAMES\SC MAPS\MPQExport\Maze.scm");
 
         string extractPath = Environment.ExpandEnvironmentVariables(@"C:\Users\%USERNAME%\Dropbox\VIDEO GAMES\SC MAPS\MPQExport");
@@ -53,7 +48,10 @@ namespace MazeMaker
             LoadingTimer.Tick += new EventHandler(TimerEventProcessor);
             wrapperClass = new Wrapper();
             InitializeComponent();
-
+            loadByteViewer();
+        }
+        private void loadByteViewer()
+        {
             byteviewer = new ByteViewer();
             byteviewer.Location = new Point(8, 46);
             byteviewer.Size = new Size(600, 338);
@@ -124,7 +122,7 @@ namespace MazeMaker
             bool close = Classes.SFmpq.SFileCloseArchive(hMPQ);
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void button3_Click(object sender, EventArgs e)//Delete file from MPQ
         {
            // bool close = Classes.SFmpq.SFileCloseArchive(hMPQ);
             //MOAU_CREATE_NEW
@@ -140,14 +138,12 @@ namespace MazeMaker
             //int value =  Classes.SFmpq.MpqCloseUpdatedArchive(hMPQ,0);
         }
 
-        private void button4_Click(object sender, EventArgs e)
-        {
-            //import
-            
+        private void button4_Click(object sender, EventArgs e)//import
+        {                        
             wrapperClass.ImportFile(mazePath,"");
         }
 
-        private void button5_Click(object sender, EventArgs e)
+        private void button5_Click(object sender, EventArgs e)//load byte viewer
         {
             OpenFileDialog ofd = new OpenFileDialog();
             if (ofd.ShowDialog() != DialogResult.OK)
@@ -156,7 +152,7 @@ namespace MazeMaker
             byteviewer.SetFile(ofd.FileName);
         }
 
-        private async void button6_Click(object sender, EventArgs e)
+        private async void button6_Click(object sender, EventArgs e)//create file
         {
             OpenFileDialog ofd = new OpenFileDialog();
             if (ofd.ShowDialog() != DialogResult.OK)
@@ -184,7 +180,7 @@ namespace MazeMaker
             try
             {
                 readyToWait(myButton);
-                map = mazeToString(await Task.Run(()=> mazeFunctions.startMazeAsync(maze, startWorm, 1000, random)));
+                map = mazeFunctions.mazeToString(await Task.Run(()=> mazeFunctions.startMazeAsync(maze, startWorm, 1000, random)));
             }
             catch (Exception err)
             {
@@ -196,20 +192,10 @@ namespace MazeMaker
                 doneWaiting(myButton, label);
             }
 
-
-
             bool success = ByteArrayToFile(ofd.FileName, StringToByteArray(map), 0x04A2);//MTXM broodwar reads
              success = ByteArrayToFile(ofd.FileName, StringToByteArray(map), 0x24AA);//TILE staredit
-
-
         }
-        public void doneWaiting(Button button, string previousBttnLabel)
-        {
-            waiting = false;
-            this.Cursor = Cursors.Default;
-            button.Text = previousBttnLabel;
-            button.Enabled = true;
-        }
+                        
         public bool ByteArrayToFile(string fileName, byte[] byteArray, long offset)
         {
             try
@@ -227,6 +213,7 @@ namespace MazeMaker
                 return false;
             }
         }
+        
         public static byte[] StringToByteArray(string hex)
         {
             return Enumerable.Range(0, hex.Length)
@@ -237,24 +224,18 @@ namespace MazeMaker
 
         private string createMap()
         {
-
             string HG = "6603";
             string LG = "4400";
             string W = "2600";
-
             string[] tiles = new string[] { HG, LG, W };
-
             string result = "";
-
             for (int i = 0; i < 64; i++)
             {
                 for (int j = 0; j < 64; j++)
                 {
                     result += tiles[random.Next(3)];
-
                 }
             }
-
             return result;
         }
 
@@ -269,25 +250,12 @@ namespace MazeMaker
             LoadingTimer.Start();
         }
 
-        public string mazeToString(bool[,] maze)
+        public void doneWaiting(Button button, string previousBttnLabel)
         {
-            string mazeStr = "";
-            for (int i = 0; i < 64; i++)
-            {
-                for (int j = 0; j < 64; j++)
-                {
-                    if (maze[i, j])
-                    {
-                        mazeStr += "6603";
-                    }
-                    else
-                    {
-                        mazeStr += "4400";
-                    }
-                }
-            }
-            return mazeStr;
-
+            waiting = false;
+            this.Cursor = Cursors.Default;
+            button.Text = previousBttnLabel;
+            button.Enabled = true;
         }
 
         private void Form1_Load(object sender, EventArgs e)

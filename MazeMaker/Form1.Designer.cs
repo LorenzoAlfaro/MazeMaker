@@ -50,7 +50,7 @@
             this.groupBox1.Controls.Add(this.button1);
             this.groupBox1.Location = new System.Drawing.Point(12, 421);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(355, 137);
+            this.groupBox1.Size = new System.Drawing.Size(386, 137);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "groupBox1";
@@ -61,7 +61,7 @@
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(109, 25);
             this.button4.TabIndex = 4;
-            this.button4.Text = "button4";
+            this.button4.Text = "Import File";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
@@ -105,7 +105,7 @@
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(440, 512);
+            this.button5.Location = new System.Drawing.Point(276, 388);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(122, 27);
             this.button5.TabIndex = 1;
@@ -115,9 +115,9 @@
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(451, 294);
+            this.button6.Location = new System.Drawing.Point(404, 511);
             this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(130, 23);
+            this.button6.Size = new System.Drawing.Size(178, 47);
             this.button6.TabIndex = 2;
             this.button6.Text = "Write Map";
             this.button6.UseVisualStyleBackColor = true;
@@ -126,7 +126,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(526, 24);
+            this.label9.Location = new System.Drawing.Point(588, 513);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(35, 13);
             this.label9.TabIndex = 3;
@@ -136,7 +136,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 570);
+            this.ClientSize = new System.Drawing.Size(728, 570);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
