@@ -41,6 +41,7 @@ namespace MazeMaker
         static string HG = "4400";//Highground
         static string LG = "2600";//low ground
         static string BR = "6603";//wall
+        int blocksFilled = 0;
 
         string[] values = new string[] { HG, LG,BR };
         public Form1()
@@ -66,6 +67,8 @@ namespace MazeMaker
             {
 
                 myTimer.Stop();
+
+                label1.Text = blocksFilled.ToString(); 
 
                 if (label9.Text == "Loading.")
                 {
@@ -180,7 +183,8 @@ namespace MazeMaker
             try
             {
                 readyToWait(myButton);
-                map = mazeFunctions.mazeToString(await Task.Run(()=> mazeFunctions.startMazeAsync(maze, startWorm, 1000, random)));
+                
+                map = mazeFunctions.mazeToString(await Task.Run(()=> mazeFunctions.startMazeAsync(maze, startWorm, 2000, random, ref blocksFilled)));
             }
             catch (Exception err)
             {
