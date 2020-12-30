@@ -8,11 +8,15 @@ using VB6Wrapper;
 using System.Drawing;
 using System.Linq;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace MazeMaker
 {
     public partial class Form1 : Form
     {
+        public Timer LoadingTimer = new Timer();//Timer to give feedback to the user when something takes a long time to run
+        public bool waiting = false; //when something is waiting an async response use this
+
         int hMPQ = 0; //handle to MPQ
         Random random = new Random();
         Wrapper wrapperClass;
@@ -45,8 +49,8 @@ namespace MazeMaker
 
         string[] values = new string[] { HG, LG,BR };
         public Form1()
-        {           
-            
+        {
+            LoadingTimer.Tick += new EventHandler(TimerEventProcessor);
             wrapperClass = new Wrapper();
             InitializeComponent();
 
@@ -56,6 +60,38 @@ namespace MazeMaker
             byteviewer.Anchor = AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Top;
             byteviewer.SetBytes(new byte[] { });
             this.Controls.Add(byteviewer);
+        }
+        private void TimerEventProcessor(Object myObject, EventArgs myEventArgs)
+        {
+            Timer myTimer = (Timer)myObject;
+            if (waiting)
+            {
+
+                myTimer.Stop();
+
+                if (label9.Text == "Loading.")
+                {
+                    label9.Text = "Loading..";
+                }
+                else if (label9.Text == "Loading..")
+                {
+                    label9.Text = "Loading...";
+                }
+                else
+                {
+                    label9.Text = "Loading.";
+                }
+
+                myTimer.Interval = 500;
+                myTimer.Start();
+
+            }
+            else
+            {
+                myTimer.Stop();
+                label9.Text = "Done";
+
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -120,7 +156,7 @@ namespace MazeMaker
             byteviewer.SetFile(ofd.FileName);
         }
 
-        private void button6_Click(object sender, EventArgs e)
+        private async void button6_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
             if (ofd.ShowDialog() != DialogResult.OK)
@@ -142,11 +178,37 @@ namespace MazeMaker
             }
             bool[,] maze = new bool[64, 64];
             List<int[]> startWorm = new List<int[]>();
-            map = mazeToString(startMaze(maze, startWorm,1000));
+
+            Button myButton = (Button)sender;
+            string label = myButton.Text;
+            try
+            {
+                readyToWait(myButton);
+                map = mazeToString(await Task.Run(()=> mazeFunctions.startMazeAsync(maze, startWorm, 1000, random)));
+            }
+            catch (Exception err)
+            {
+                Console.WriteLine("failed creating map");
+                //throw;
+            }
+            finally
+            {
+                doneWaiting(myButton, label);
+            }
+
+
+
             bool success = ByteArrayToFile(ofd.FileName, StringToByteArray(map), 0x04A2);//MTXM broodwar reads
              success = ByteArrayToFile(ofd.FileName, StringToByteArray(map), 0x24AA);//TILE staredit
 
 
+        }
+        public void doneWaiting(Button button, string previousBttnLabel)
+        {
+            waiting = false;
+            this.Cursor = Cursors.Default;
+            button.Text = previousBttnLabel;
+            button.Enabled = true;
         }
         public bool ByteArrayToFile(string fileName, byte[] byteArray, long offset)
         {
@@ -196,58 +258,15 @@ namespace MazeMaker
             return result;
         }
 
-        public bool[,] startMaze(bool[,] maze, List<int[]> startWorm, int size)
+        public void readyToWait(Button myButton)
         {
-            string mazeStr = "";
+            waiting = true;
+            this.Cursor = Cursors.WaitCursor;
+            myButton.Text = "Loading";
+            myButton.Enabled = false;
 
-            //bool[,] maze = new bool[64, 64];
-            int[] startPoint = new int[2] { 0, 0 };
-            int[] exit = new int[2] { 0, 0 };
-
-            startPoint[0] = random.Next(64);
-            startPoint[1] = random.Next(64);
-
-            exit[0] = random.Next(64);
-            exit[1] = random.Next(64);
-
-            //List<int[]> startWorm = new List<int[]>();
-            List<int[]> endWormWorm = new List<int[]>();
-
-            int loops = 0;
-            while (startWorm.Count < size & loops<4000)
-            {
-                int[] newTile = nextTile(startPoint, maze,startWorm);
-
-                if (newTile[0] != startPoint[0] | newTile[1] != startPoint[1])
-                {
-                    if (newTile[0] ==1 | newTile[0] == 63)
-                    {
-                        newTile[0] = random.Next(63);
-                    }                    
-                    if (newTile[1] == 1 | newTile[1] == 63)
-                    {
-                        newTile[1] = random.Next(63);
-                    }                    
-
-                    if (!startWorm.Exists(x => x[0] == newTile[0] & x[1] == newTile[1]))
-                    {
-                        startPoint[0] = newTile[0];
-                        startPoint[1] = newTile[1];
-                        startWorm.Add(newTile);
-                    }                    
-                }
-                loops += 1;
-            }
-
-            if (startWorm.Count< size)
-            {
-                maze = startMaze(maze, startWorm, size);
-            }
-
-
-            return maze;
-
-            //Console.WriteLine(maze);
+            LoadingTimer.Interval = 500;
+            LoadingTimer.Start();
         }
 
         public string mazeToString(bool[,] maze)
@@ -271,150 +290,9 @@ namespace MazeMaker
 
         }
 
-        public int[] nextTile(int[] currentTile, bool[,] maze, List<int[]> startWorm)
+        private void Form1_Load(object sender, EventArgs e)
         {
-            int[] nextTile = new int[2];
-            currentTile.CopyTo(nextTile, 0);
-            int[] tempTile = new int[2];
-            nextTile.CopyTo(tempTile, 0);
 
-
-            int direction = random.Next(4);
-
-
-
-            if (direction == 0) //up
-            {
-                tempTile[0] = nextTile[0] - 1;
-
-                if (tempTile[0] < 0)
-                {
-                    return currentTile;                                        
-                }
-
-                if (!maze[tempTile[0], tempTile[1]])
-                {
-                    if (checkLeftRight(tempTile, maze))
-                    {
-                        maze[tempTile[0], tempTile[1]] = true;
-                        return tempTile;
-                    }
-                    else
-                    {
-                        tempTile = startWorm[random.Next(startWorm.Count)];
-                        return tempTile;
-                    }
-                }
-            }
-            else if (direction == 1) //down
-            {
-                tempTile[0] = nextTile[0] + 1;
-
-                if (tempTile[0] > 63)
-                {                  
-                    return currentTile;                    
-                }
-
-                if (!maze[tempTile[0], tempTile[1]])
-                {
-                    if (checkLeftRight(tempTile,maze))
-                    {
-                        maze[tempTile[0], tempTile[1]] = true;
-                        return tempTile;
-                    }
-                    else
-                    {
-                        tempTile = startWorm[random.Next(startWorm.Count)];                        
-                        return tempTile;
-                    }
-                    
-                }
-            }
-            else if (direction == 2) //left
-            {
-                tempTile[1] = nextTile[1] - 1;
-
-                if (tempTile[1] < 0)
-                {                    
-                    return currentTile;                                        
-                }
-
-                if (!maze[tempTile[0], tempTile[1]])
-                {
-                    if (checkUpDown(tempTile, maze))
-                    {
-                        maze[tempTile[0], tempTile[1]] = true;
-                        return tempTile;
-                    }
-                    else
-                    {
-                        tempTile = startWorm[random.Next(startWorm.Count)];
-                        return tempTile;
-                    }
-                }
-            }
-            else if (direction == 3) //right
-            {
-                tempTile[1] = nextTile[1] + 1;
-
-                if (tempTile[1] > 63)
-                {                    
-                    return currentTile;                   
-                }
-
-                if (!maze[tempTile[0], tempTile[1]])
-                {
-                    if (checkUpDown(tempTile, maze))
-                    {
-                        maze[tempTile[0], tempTile[1]] = true;
-                        return tempTile;
-                    }
-                    else
-                    {
-                        tempTile = startWorm[random.Next(startWorm.Count)];
-                        return tempTile;
-                    }
-                }
-            }
-            tempTile = startWorm[random.Next(startWorm.Count)];
-            //tempTile[0] = random.Next(64);
-            //tempTile[1] = random.Next(64);
-            return tempTile;            
-        }
-
-        bool checkLeftRight(int[] tile, bool[,] maze)
-        {
-            try
-            {
-                if(!maze[tile[0], tile[1] + 1] & !maze[tile[0], tile[1] - 1])
-                {
-                    return true;
-                }
-            }
-            catch (Exception err)
-            {
-                return false;
-                //throw;
-            }
-            
-
-            return false;
-        }
-        bool checkUpDown(int[] tile, bool[,] maze)
-        {
-            try
-            {
-                if (!maze[tile[0]+1, tile[1]] & !maze[tile[0], tile[1]-1])
-                {
-                    return true;
-                }
-            }
-            catch (Exception err)
-            {
-                return false;
-                //throw;
-            }
-            return false;            
         }
     }
 }
