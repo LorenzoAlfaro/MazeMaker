@@ -184,7 +184,7 @@ namespace MazeMaker
             {
                 readyToWait(myButton);
                 
-                map = mazeFunctions.mazeToString(await Task.Run(()=> mazeFunctions.startMazeAsync(maze, startWorm, 2000, random, ref blocksFilled)));
+                map = mazeFunctions.mazeToString(await Task.Run(()=> mazeFunctions.startMazeAsync(maze, startWorm, 2000, random, ref blocksFilled,checkBox1.Checked)));
             }
             catch (Exception err)
             {
