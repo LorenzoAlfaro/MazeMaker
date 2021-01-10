@@ -9,6 +9,7 @@ using System.Drawing;
 using System.Linq;
 using System.IO;
 using System.Threading.Tasks;
+using System.Text;
 
 namespace MazeMaker
 {
@@ -196,16 +197,33 @@ namespace MazeMaker
                 doneWaiting(myButton, label);
             }
 
-            bool success = ByteArrayToFile(ofd.FileName, StringToByteArray(map), 0x04A2);//MTXM broodwar reads
-             success = ByteArrayToFile(ofd.FileName, StringToByteArray(map), 0x24AA);//TILE staredit
+            long offset2 = 0;
+            using (var fs = new FileStream(ofd.FileName, FileMode.Open, FileAccess.Read))
+            {
+                byte[] matchBytes = { 0x4d, 0x54, 0x58, 0x4d };//MTXM
+                offset2 = findPattern(matchBytes, fs)+8;
+
+            }
+            long offset3 = 0;
+            using (var fs = new FileStream(ofd.FileName, FileMode.Open, FileAccess.Read))
+            {
+                byte[] matchBytes = { 0x54, 0x49, 0x4c, 0x45 };
+                offset3 = findPattern(matchBytes, fs) + 8;//TILE
+            }
+
+            //bool success = ByteArrayToFile(ofd.FileName, StringToByteArray(map), 0x04A2);//MTXM broodwar reads
+            bool success = ByteArrayToFile(ofd.FileName, StringToByteArray(map), offset2);//MTXM broodwar reads
+            success = ByteArrayToFile(ofd.FileName, StringToByteArray(map), offset3);//TILE staredit 0x24AA
         }
                         
         public bool ByteArrayToFile(string fileName, byte[] byteArray, long offset)
         {
             try
             {
-                using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Write))
+                using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.ReadWrite))
                 {
+                    //byte[] matchBytes = { };
+                    //long offset2 = findPattern(matchBytes, fs,0);
                     fs.Seek(offset, SeekOrigin.Begin);// 0x04A2
                     fs.Write(byteArray, 0, byteArray.Length); //04A1 = 1185
                     return true;
@@ -216,6 +234,39 @@ namespace MazeMaker
                 Console.WriteLine("Exception caught in process: {0}", ex);
                 return false;
             }
+        }
+
+        public long findPattern(byte[] pattern, FileStream fs)
+        {
+            long offset = -1;
+
+            int byteRead = 1;
+            while (byteRead!=-1)
+            {
+                byteRead = fs.ReadByte();
+
+                if (byteRead== pattern[0])
+                {
+                    bool completeMatch = true;
+                    for (int i = 1; i < pattern.Count(); i++)
+                    {
+
+                        byteRead = fs.ReadByte();
+                        if (byteRead != pattern[i])
+                        {
+                            completeMatch = false;
+                            break;
+                            //keep going
+                        }
+                    }
+                    if (completeMatch)
+                    {
+                        return fs.Position-pattern.Count();
+                    }
+                }                
+            }
+
+            return offset;
         }
         
         public static byte[] StringToByteArray(string hex)
@@ -264,6 +315,45 @@ namespace MazeMaker
 
         private void Form1_Load(object sender, EventArgs e)
         {
+
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            if (ofd.ShowDialog() != DialogResult.OK)
+                return;
+
+            byte[] LogoDataBy = ASCIIEncoding.ASCII.GetBytes(textBox1.Text);
+
+            try
+            {
+                using (var fs = new FileStream(ofd.FileName, FileMode.Open, FileAccess.Read))
+                {
+                    //byte[] matchBytes = {0x4d,0x54,0x58,0x4d };
+                    byte[] matchBytes = LogoDataBy;
+
+                    long offset2  = findPattern(matchBytes, fs) + 4;
+                    textBox2.Text = offset2.ToString();
+
+                    byte[] size = new byte[]{0,0,0,0};
+
+                    for (int i = 0; i < 4; i++)
+                    {
+                        size[i] = Convert.ToByte(fs.ReadByte());
+                    }
+
+                    //if (BitConverter.IsLittleEndian)
+                        //Array.Reverse(size);
+
+                    int j = BitConverter.ToInt32(size, 0);
+                    Console.WriteLine("int: {0}", j);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception caught in process: {0}", ex);                
+            }
 
         }
     }
