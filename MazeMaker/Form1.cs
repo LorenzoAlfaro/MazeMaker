@@ -261,7 +261,7 @@ namespace MazeMaker
                     }
                     if (completeMatch)
                     {
-                        return fs.Position-pattern.Count();
+                        return fs.Position-pattern.Count();//this returns the start position of the size. NOT the start position of the string pattern
                     }
                 }                
             }
