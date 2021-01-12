@@ -6,6 +6,18 @@ using System.Threading.Tasks;
 
 namespace MazeMaker
 {
+    public struct Location
+    {
+        public int leftX;//u32
+        public int topY;//u32
+        public int rightX;//u32
+        public int bottY;
+        public Int16 stringNumber;//u16
+        public Int16 flags;//u16     
+        public long offSet;
+        //4+4+4+4+2+2=20
+
+    }
     public static class mazeFunctions
     {        
         public static Task<bool[,]> startMazeAsync (bool[,] maze, List<int[]> startWorm, int size, Random random, ref int blocksFilled, bool regionOrCorridors)
