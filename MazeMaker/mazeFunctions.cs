@@ -288,5 +288,22 @@ namespace MazeMaker
             }
             return mazeStr;
         }
+
+        public static string createMap(Random random)
+        {
+            string HG = "6603";
+            string LG = "4400";
+            string W = "2600";
+            string[] tiles = new string[] { HG, LG, W };
+            string result = "";
+            for (int i = 0; i < 64; i++)
+            {
+                for (int j = 0; j < 64; j++)
+                {
+                    result += tiles[random.Next(3)];
+                }
+            }
+            return result;
+        }
     }
 }
