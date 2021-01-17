@@ -107,10 +107,10 @@ namespace MazeMaker
             {
                 readyToWait(myButton);                
                 map = mazeFunctions.mazeToString(await Task.Run(()=> mazeFunctions.startMazeAsync(maze, new List<int[]>(), 2000, random, ref blocksFilled,checkBox1.Checked)));
-                bool success = ByteOperations.ByteArrayToFile(ofd.FileName, ByteOperations.StringToByteArray(map),
-                ByteOperations.findOffset(new byte[] { 0x4d, 0x54, 0x58, 0x4d }, ofd.FileName));//MTXM broodwar reads, 0x04A2
-                success = ByteOperations.ByteArrayToFile(ofd.FileName, ByteOperations.StringToByteArray(map),
-                    ByteOperations.findOffset(new byte[] { 0x54, 0x49, 0x4c, 0x45 }, ofd.FileName));//TILE staredit 0x24AA
+                bool success = BO.ByteArrayToFile(ofd.FileName, BO.StringToByteArray(map),
+                BO.findOffset(new byte[] { 0x4d, 0x54, 0x58, 0x4d }, ofd.FileName));//MTXM broodwar reads, 0x04A2
+                success = BO.ByteArrayToFile(ofd.FileName, BO.StringToByteArray(map),
+                    BO.findOffset(new byte[] { 0x54, 0x49, 0x4c, 0x45 }, ofd.FileName));//TILE staredit 0x24AA
             }
             catch (Exception err)
             {
@@ -131,20 +131,13 @@ namespace MazeMaker
             {
                 using (var fs = new FileStream(ofd.FileName, FileMode.Open, FileAccess.ReadWrite))
                 {                    
-                    long offset2  = ByteOperations.findPattern(LogoDataBy, fs) + 4;                    
-                    
-                    
-                    for (int i = 0; i < 4; i++)
-                    {
-                        Convert.ToByte(fs.ReadByte());
-                    }
-                   
-                    
+                    BO.findPattern(LogoDataBy, fs);
+                    fs.Position = fs.Position + 4;//skip the section size 4 bytes
+                                                                               
                     Location myLocation = StarcraftObj.readLocation(fs);
                     myLocation.topY = 0;
                     myLocation.bottY = 32;//bottom is bigger
-                    StarcraftObj.updateLocation(myLocation, fs);
-                    
+                    StarcraftObj.updateLocation(myLocation, fs);                    
                 }
             }
             catch (Exception ex)
@@ -159,16 +152,46 @@ namespace MazeMaker
                 return;
             using (var fs = new FileStream(ofd.FileName, FileMode.Open, FileAccess.ReadWrite))
             {
-                textBox2.Text ="0x" + Convert.ToString((ByteOperations.findPattern(Encoding.ASCII.GetBytes(textBox1.Text), fs)),16).ToUpper();
-                byte[] size = new byte[] { 0, 0, 0, 0 };
-                for (int i = 0; i < 4; i++)
-                {
-                    size[i] = Convert.ToByte(fs.ReadByte());
-                }
-                int j = BitConverter.ToInt32(size, 0);
+                textBox2.Text ="0x" + Convert.ToString((BO.findPattern(Encoding.ASCII.GetBytes(textBox1.Text), fs)),16).ToUpper();                
+                //fs has its offSet moved to the end of the four bytes label, starting the other 4bytes of the section size, no need to set the offset
+                int j = BO.readInt32(fs);
                 textBox3.Text = j.ToString();
+            }                
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            if (ofd.ShowDialog() != DialogResult.OK)
+                return;
+
+            List<Unit> Units = new List<Unit>();
+            using (var fs = new FileStream(ofd.FileName, FileMode.Open, FileAccess.ReadWrite))
+            {
+
+                BO.findPattern(Encoding.ASCII.GetBytes("UNIT"), fs);
+                int count = BO.readInt32(fs)/36;
+
+                for (int i = 0; i < count; i++)
+                {
+                    Unit thisUnit = StarcraftObj.readUnit(fs);
+                    Units.Add(thisUnit);
+                }
+
+               
+                for (short i = 0; i < count; i++)
+                {
+                    Units[i].x = (short)random.Next(2048);
+                    Units[i].y = (short)random.Next(2048);
+                    Console.WriteLine(Units[i].x.ToString());
+                }
+
+
+                for (int i = 0; i < count; i++)
+                {
+                    StarcraftObj.updateUnit(Units[i], fs);
+                }                                                                                
             }
-                
         }
     }
 }

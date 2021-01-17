@@ -47,7 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ByteOperations.cs" />
+    <Compile Include="BO.cs" />
     <Compile Include="Classes\SFmpq.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>

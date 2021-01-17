@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace MazeMaker
 {
-    public static class ByteOperations
+    public static class BO
     {
         public static byte[] StringToByteArray(string hex)
         {
@@ -72,6 +72,26 @@ namespace MazeMaker
                 Console.WriteLine("Exception caught in process: {0}", ex);
                 return false;
             }
+        }
+
+        public static int readInt32(FileStream fs)
+        {            
+            byte[] size = new byte[] { 0, 0, 0, 0 };
+            for (int i = 0; i < 4; i++)
+            {
+                size[i] = Convert.ToByte(fs.ReadByte());
+            }
+            return BitConverter.ToInt32(size, 0);
+        }
+
+        public static short readInt16(FileStream fs)
+        {
+            byte[] size = new byte[] { 0, 0};
+            for (int i = 0; i < 2; i++)
+            {
+                size[i] = Convert.ToByte(fs.ReadByte());
+            }
+            return BitConverter.ToInt16(size, 0);
         }
     }
 }
