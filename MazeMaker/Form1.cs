@@ -108,27 +108,31 @@ namespace MazeMaker
             try
             {
                 readyToWait(myButton);
-
+                int height;
+                int width;
                 using (var fs = new FileStream(ofd.FileName, FileMode.Open, FileAccess.ReadWrite))
                 {
 
-                    int width = mazeFunctions.mapWidth(fs);
-                    int height = mazeFunctions.mapHeight(fs);
-                    bool[,] maze = new bool[height, width];
-                    map = mazeFunctions.mazeToString(await Task.Run(() => mazeFunctions.startMazeAsync(maze, openTiles, (width * height / 2), random, ref blocksFilled, checkBox1.Checked, width, height)), width, height);
+                    width = mazeFunctions.mapWidth(fs);
+                    height = mazeFunctions.mapHeight(fs);
+
                 }
-                using (var fs = new FileStream(ofd.FileName, FileMode.Open, FileAccess.ReadWrite))
-                {
-                    bool success = BO.ByteArrayToFile(fs, BO.StringToByteArray(map),
+                bool[,] maze = new bool[height, width];
+                map = mazeFunctions.mazeToString(await Task.Run(() => mazeFunctions.startMazeAsync(maze, openTiles, (width * height / 2), random, ref blocksFilled, checkBox1.Checked, width, height)), width, height);
+              
+                    
+             
+                    bool success = BO.ByteArrayToFile(ofd.FileName, BO.StringToByteArray(map),
                      BO.findOffset(new byte[] { 0x4d, 0x54, 0x58, 0x4d }, ofd.FileName));//MTXM broodwar reads, 0x04A2
-                    success = BO.ByteArrayToFile(fs, BO.StringToByteArray(map),
+                    success = BO.ByteArrayToFile(ofd.FileName, BO.StringToByteArray(map),
                      BO.findOffset(new byte[] { 0x54, 0x49, 0x4c, 0x45 }, ofd.FileName));//TILE staredit 0x24AA
-                }
+               
                 
             }
             catch (Exception err)
             {
-                Console.WriteLine("failed creating map " + err.Message);
+                throw err;
+                //Console.WriteLine("failed creating map " + err.Message);
             }
             finally
             {
