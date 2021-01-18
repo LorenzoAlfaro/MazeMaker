@@ -93,8 +93,6 @@ namespace MazeMaker
         {
             return BitConverter.GetBytes(i);
         }
-
-
     }
 }
 

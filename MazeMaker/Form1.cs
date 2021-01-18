@@ -96,30 +96,51 @@ namespace MazeMaker
         private async void button6_Click(object sender, EventArgs e)//create file
         {
             Random random = new Random();
+            List<int[]> openTiles = new List<int[]>();
             OpenFileDialog ofd = new OpenFileDialog();
             if (ofd.ShowDialog() != DialogResult.OK)
                 return;            
             string map="";                        
-            bool[,] maze = new bool[64, 64];            
+                       
             Button myButton = (Button)sender;
             string label = myButton.Text;
+            
             try
             {
-                readyToWait(myButton);                
-                map = mazeFunctions.mazeToString(await Task.Run(()=> mazeFunctions.startMazeAsync(maze, new List<int[]>(), 2000, random, ref blocksFilled,checkBox1.Checked)));
-                bool success = BO.ByteArrayToFile(ofd.FileName, BO.StringToByteArray(map),
-                BO.findOffset(new byte[] { 0x4d, 0x54, 0x58, 0x4d }, ofd.FileName));//MTXM broodwar reads, 0x04A2
-                success = BO.ByteArrayToFile(ofd.FileName, BO.StringToByteArray(map),
-                    BO.findOffset(new byte[] { 0x54, 0x49, 0x4c, 0x45 }, ofd.FileName));//TILE staredit 0x24AA
+                readyToWait(myButton);
+
+                using (var fs = new FileStream(ofd.FileName, FileMode.Open, FileAccess.ReadWrite))
+                {
+
+                    int width = mazeFunctions.mapWidth(fs);
+                    int height = mazeFunctions.mapHeight(fs);
+                    bool[,] maze = new bool[height, width];
+                    map = mazeFunctions.mazeToString(await Task.Run(() => mazeFunctions.startMazeAsync(maze, openTiles, (width * height / 2), random, ref blocksFilled, checkBox1.Checked, width, height)), width, height);
+                }
+                using (var fs = new FileStream(ofd.FileName, FileMode.Open, FileAccess.ReadWrite))
+                {
+                    bool success = BO.ByteArrayToFile(fs, BO.StringToByteArray(map),
+                     BO.findOffset(new byte[] { 0x4d, 0x54, 0x58, 0x4d }, ofd.FileName));//MTXM broodwar reads, 0x04A2
+                    success = BO.ByteArrayToFile(fs, BO.StringToByteArray(map),
+                     BO.findOffset(new byte[] { 0x54, 0x49, 0x4c, 0x45 }, ofd.FileName));//TILE staredit 0x24AA
+                }
+                
             }
             catch (Exception err)
             {
-                Console.WriteLine("failed creating map " + err.Message);                
+                Console.WriteLine("failed creating map " + err.Message);
             }
             finally
             {
                 doneWaiting(myButton, label);
-            }                                                                        
+            }
+            
+            using (var fs = new FileStream(ofd.FileName, FileMode.Open, FileAccess.ReadWrite))
+            {
+                mazeFunctions.updateUnits(fs, openTiles, random);
+                mazeFunctions.updateLocations(fs, openTiles, random);
+
+            }
         }                                                                        
         private void button7_Click(object sender, EventArgs e)//update location
         {

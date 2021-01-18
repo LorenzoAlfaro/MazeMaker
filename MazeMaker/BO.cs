@@ -54,18 +54,16 @@ namespace MazeMaker
             }
             return offset;
         }
-        public static bool ByteArrayToFile(string fileName, byte[] byteArray, long offset)
+        public static bool ByteArrayToFile(FileStream fs, byte[] byteArray, long offset)
         {
             try
-            {
-                using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.ReadWrite))
-                {
-                    //byte[] matchBytes = { };
-                    //long offset2 = findPattern(matchBytes, fs,0);
-                    fs.Seek(offset, SeekOrigin.Begin);// 0x04A2
-                    fs.Write(byteArray, 0, byteArray.Length); //04A1 = 1185
-                    return true;
-                }
+            {               
+                //byte[] matchBytes = { };
+                //long offset2 = findPattern(matchBytes, fs,0);
+                fs.Seek(offset, SeekOrigin.Begin);// 0x04A2
+                fs.Write(byteArray, 0, byteArray.Length); //04A1 = 1185
+                return true;
+                
             }
             catch (Exception ex)
             {
