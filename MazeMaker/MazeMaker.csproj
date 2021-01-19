@@ -96,7 +96,7 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
     <COMReference Include="VB6Wrapper">
-      <Guid>{B25BCBF9-6880-40D5-A5D7-7657C1D6975B}</Guid>
+      <Guid>{F7E8087E-2FEB-478A-B8DE-CAE83E0C2B5C}</Guid>
       <VersionMajor>1</VersionMajor>
       <VersionMinor>0</VersionMinor>
       <Lcid>0</Lcid>

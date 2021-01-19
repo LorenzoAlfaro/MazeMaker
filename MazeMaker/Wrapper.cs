@@ -33,12 +33,12 @@ namespace MazeMaker
 
         public bool delete()
         {
-            // bool close = Classes.SFmpq.SFileCloseArchive(hMPQ);
+            bool close = Classes.SFmpq.SFileCloseArchive(hMPQ);
             //MOAU_CREATE_NEW
 
 
-            //hMPQ = Classes.SFmpq.MpqOpenArchiveForUpdateEx(mazePath, Classes.SFmpq.MOAU_OPEN_EXISTING | Classes.SFmpq.MOAU_MAINTAIN_LISTFILE, 1024, 3);
-            //Classes.SFmpq.SFileSetLocale(0);//List.ListItems.Item(fNum).ListSubItems(4).Tag = 0
+            hMPQ = Classes.SFmpq.MpqOpenArchiveForUpdateEx(mazePath, Classes.SFmpq.MOAU_OPEN_EXISTING | Classes.SFmpq.MOAU_MAINTAIN_LISTFILE, 1024, 3);
+            Classes.SFmpq.SFileSetLocale(0);//List.ListItems.Item(fNum).ListSubItems(4).Tag = 0
             //bool success = wrapperClass.DeleteFile(mazePath, listBox1.SelectedItem.ToString());
 
             //= Classes.SFmpq.MpqDeleteFile(hMPQ, listBox1.SelectedItem.ToString());
