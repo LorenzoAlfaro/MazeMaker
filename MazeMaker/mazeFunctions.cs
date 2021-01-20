@@ -43,36 +43,28 @@ namespace MazeMaker
     {        
         public static Task<bool[,]> startMazeAsync (bool[,] maze, List<int[]> startWorm, int size, Random random, ref int blocksFilled, bool regionOrCorridors, int width, int height)
         {
-            return Task.FromResult(startMaze(maze, startWorm, size, random, ref blocksFilled, regionOrCorridors,width,height));
+            return Task.FromResult(startMaze(maze, startWorm, size, random, ref blocksFilled, regionOrCorridors,width,height));//basically a wrapper to make this file async
         }
         public static bool[,] startMaze(bool[,] maze, List<int[]> startWorm, int size, Random random, ref int blocksFilled, bool regionOrCorridors, int width,int height)
         {
-            int[] startPoint;
+            int[] startPoint;//the main function that fills a boolean array to create a maze
             if (startWorm.Count!=0)
             {
                 startPoint = startWorm[random.Next(startWorm.Count)];
+                //startWorm[random.Next(startWorm.Count)].CopyTo(startPoint,0);
             }
             else
             {
                 startPoint = new int[2] { random.Next(height), random.Next(width) };
                 startWorm.Add(startPoint);
             }
-
-            
-            if (startWorm.Count >0)
-            {
-                //startWorm[random.Next(startWorm.Count)].CopyTo(startPoint,0);
-            }
-                         
-            maze[startPoint[0], startPoint[1]] = true;
-            
+                                                 
+            maze[startPoint[0], startPoint[1]] = true;                        
             
             int loops = 0;
-
             while (startWorm.Count < size & loops < 8000)
             {                                
-                int[] newTile = nextTile(startPoint, maze, startWorm, random, regionOrCorridors,width,height);
-                
+                int[] newTile = nextTile(startPoint, maze, startWorm, random, regionOrCorridors,width,height);                
                 if (!startWorm.Exists(x => x[0] == newTile[0] & x[1] == newTile[1]))
                 {
                     if (newTile[0] != startPoint[0] ^ newTile[1] != startPoint[1]) //XOR
