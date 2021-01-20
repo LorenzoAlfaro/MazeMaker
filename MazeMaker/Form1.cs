@@ -101,8 +101,8 @@ namespace MazeMaker
         }
         private async void button6_Click(object sender, EventArgs e)//create file
         {
-            
-            
+            openTiles.Clear();
+
             OpenFileDialog ofd = new OpenFileDialog();
             if (ofd.ShowDialog() != DialogResult.OK)
                 return;            
@@ -161,6 +161,7 @@ namespace MazeMaker
             // transfomr the .chk 
             // import the file .chk to the cloned .scm,
             // test the map in staredit and starcraft
+            openTiles.Clear();
             OpenFileDialog ofd = new OpenFileDialog();
             if (ofd.ShowDialog() != DialogResult.OK)
                 return;
@@ -235,7 +236,8 @@ namespace MazeMaker
 
             wrapperClass.ImportFile(destFile, chkPath);
 
-
+            File.Move(destFile, Environment.ExpandEnvironmentVariables(@"C:\Users\%USERNAME%\Documents\StarCraft\Maps\Download\Muestras")+ "\\" + fileName + "-"+ DateTime.Now.ToString("HH:mm:ss").Replace(":","-") + ext);
+            //C:\Users\loren\Documents\StarCraft\Maps\Download\Muestras
         }
         private void button1_Click(object sender, EventArgs e)
         {

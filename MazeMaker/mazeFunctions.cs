@@ -47,14 +47,25 @@ namespace MazeMaker
         }
         public static bool[,] startMaze(bool[,] maze, List<int[]> startWorm, int size, Random random, ref int blocksFilled, bool regionOrCorridors, int width,int height)
         {
-            int[] startPoint= new int[2] {  random.Next(height), random.Next(width) };
+            int[] startPoint;
+            if (startWorm.Count!=0)
+            {
+                startPoint = startWorm[random.Next(startWorm.Count)];
+            }
+            else
+            {
+                startPoint = new int[2] { random.Next(height), random.Next(width) };
+                startWorm.Add(startPoint);
+            }
+
+            
             if (startWorm.Count >0)
             {
                 //startWorm[random.Next(startWorm.Count)].CopyTo(startPoint,0);
             }
                          
             maze[startPoint[0], startPoint[1]] = true;
-            startWorm.Add(startPoint);
+            
             
             int loops = 0;
 
