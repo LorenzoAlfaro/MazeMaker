@@ -12,9 +12,16 @@ Yes, but at what cost?
 
 Maps are stored in a propietary format. I overcame this buy looking into a similar project.
 
-TODO: URL to VB6 tool that takes images and creates maps with the tileset matching the image.
+This is based on the work of ShadowFlare who wrote this tool for editing MPQ. This DLL is needed, SFmpq.dll
 
-TODO: URL to MPQ wiki
+[Shadowflare Github repo](https://github.com/ShadowFlare/WinMPQ/blob/master/SFmpqapi.bas)
+
+[FaRTy1billion's MapSketch](http://www.staredit.net/topic/10328/)
+
+[Wiki bout the chk file](http://www.staredit.net/wiki/index.php?title=Scenario.chk)
+
+or here:
+[another wiki](https://www.starcraftai.com/wiki/CHK_Format)
 
 Now we are in the world of editing binaries. That is when you know you have gone too deep.
 
@@ -25,4 +32,15 @@ And digging into old VB6 souce code. Yay!
 
 Some very crazy looking maps that are basically mazes.
 
-TODO: Insert pictures.
+![maze2](https://github.com/LorenzoAlfaro/MazeMaker/assets/58958983/c98aa70b-18ba-4cdd-9c5e-373f8e6417fb)
+
+![maze1](https://github.com/LorenzoAlfaro/MazeMaker/assets/58958983/647e8dd8-8b15-4b20-9f56-803a107964e6)
+
+
+
+## Acknowledgements
+FaRTy1billion from [startedit.net](http://www.staredit.net/)
+and
+Alberto Uriarte from https://www.starcraftai.com/
+
+ShowdowFlare for her [library](https://sfsrealm.hopto.org/)
