@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MazeMaker
 {
-    
+
     public static class SFmpq
     {
         //    '  ShadowFlare MPQ API Library. (c) ShadowFlare Software 2002-2009
@@ -164,7 +164,7 @@ namespace MazeMaker
         //'  OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
         //'  SUCH DAMAGE.
 
-       
+
         //Type SFMPQVERSION
         //    Major As Integer
         //    Minor As Integer
@@ -176,7 +176,7 @@ namespace MazeMaker
             public static int Major;
             public static int Minor;
             public static int Revision;
-            public static int Subrevision;            
+            public static int Subrevision;
         }
 
         //' MpqInitialize does nothing.  It is only provided for
@@ -419,7 +419,7 @@ namespace MazeMaker
         //    szFileName(259) As Byte
         //End Type
 
-        public struct FILELISTENTRY //change to Int , to list files 
+        public struct FILELISTENTRY //change to Int , to list files
         {
             public static long dwFileExists;
             public static long lcLocale;
@@ -433,11 +433,11 @@ namespace MazeMaker
         //Declare Function SFileOpenArchive Lib "SFmpq.dll" (ByVal lpFileName As String, ByVal dwPriority As Long, ByVal dwFlags As Long, ByRef hMPQ As Long) As Boolean
         [DllImport("SFmpq.dll", CharSet = CharSet.Unicode)]
         public static extern bool SFileOpenArchive(
-            [MarshalAs(UnmanagedType.LPStr)]  string lpFileName,int dwPriority, int dwFlags, ref int hMPQ);//byRef hMPQ?
+            [MarshalAs(UnmanagedType.LPStr)]  string lpFileName,int dwPriority, int dwFlags, ref int hMPQ);
 
         //Declare Function SFileCloseArchive Lib "SFmpq.dll" (ByVal hMPQ As Long) As Boolean
         [DllImport("SFmpq.dll", CharSet = CharSet.Unicode)]
-        public static extern bool SFileCloseArchive(int hMPQ);//byval hMPQ?
+        public static extern bool SFileCloseArchive(int hMPQ);
 
         //Declare Function SFileOpenFileAsArchive Lib "SFmpq.dll" (ByVal hSourceMPQ As Long, ByVal lpFileName As String, ByVal dwPriority As Long, ByVal dwFlags As Long, ByRef hMPQ As Long) As Boolean
         [DllImport("SFmpq.dll")]
