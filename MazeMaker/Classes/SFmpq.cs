@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -407,6 +407,7 @@ namespace MazeMaker
         //' SFileOpenFileEx search scopes
         //Public Const SFILE_SEARCH_CURRENT_ONLY As Long = &H0 'Used with SFileOpenFileEx; only the archive with the handle specified will be searched for the file
         public const long SFILE_SEARCH_CURRENT_ONLY = 0x0;
+
         //Public Const SFILE_SEARCH_ALL_OPEN As Long = &H1 'SFileOpenFileEx will look through all open archives for the file
         public const long SFILE_SEARCH_ALL_OPEN = 0x1;
 
@@ -433,7 +434,7 @@ namespace MazeMaker
         //Declare Function SFileOpenArchive Lib "SFmpq.dll" (ByVal lpFileName As String, ByVal dwPriority As Long, ByVal dwFlags As Long, ByRef hMPQ As Long) As Boolean
         [DllImport("SFmpq.dll", CharSet = CharSet.Unicode)]
         public static extern bool SFileOpenArchive(
-            [MarshalAs(UnmanagedType.LPStr)]  string lpFileName,int dwPriority, int dwFlags, ref int hMPQ);
+            [MarshalAs(UnmanagedType.LPStr)]  string lpFileName, int dwPriority, int dwFlags, ref int hMPQ);
 
         //Declare Function SFileCloseArchive Lib "SFmpq.dll" (ByVal hMPQ As Long) As Boolean
         [DllImport("SFmpq.dll", CharSet = CharSet.Unicode)]
@@ -449,23 +450,23 @@ namespace MazeMaker
 
         //Declare Function SFileOpenFile Lib "SFmpq.dll" (ByVal lpFileName As String, ByRef hFile As Long) As Boolean
         [DllImport("SFmpq.dll")]
-        public static extern bool SFileOpenFile(string lpFileName, ref long hFile);
+        public static extern bool SFileOpenFile(string lpFileName, ref int hFile);
 
         //Declare Function SFileOpenFileEx Lib "SFmpq.dll" (ByVal hMPQ As Long, ByVal lpFileName As String, ByVal dwSearchScope As Long, ByRef hFile As Long) As Boolean
         [DllImport("SFmpq.dll")]
-        public static extern bool SFileOpenFileEx(int hMPQ, string lpFileName,long dwSearchScope,ref long hFile);
+        public static extern bool SFileOpenFileEx(int hMPQ, [MarshalAs(UnmanagedType.LPStr)] string lpFileName, int dwSearchScope, ref int hFile);
 
         //Declare Function SFileCloseFile Lib "SFmpq.dll" (ByVal hFile As Long) As Boolean
         [DllImport("SFmpq.dll")]
-        public static extern bool SFileCloseFile(long hFile);
+        public static extern bool SFileCloseFile(int hFile);
 
         //Declare Function SFileGetFileSize Lib "SFmpq.dll" (ByVal hFile As Long, lpFileSizeHigh As Long) As Long
         [DllImport("SFmpq.dll")]
-        public static extern long SFileGetFileSize(long hFile, long lpFileSizeHigh);
+        public static extern int SFileGetFileSize(int hFile, int lpFileSizeHigh);
 
         //Declare Function SFileGetFileArchive Lib "SFmpq.dll" (ByVal hFile As Long, ByRef hMPQ As Long) As Boolean
         [DllImport("SFmpq.dll")]
-        public static extern bool SFileGetFileArchive(long hFile, ref int hMPQ);
+        public static extern bool SFileGetFileArchive(int hFile, ref int hMPQ);
 
         //Declare Function SFileGetFileName Lib "SFmpq.dll" (ByVal hMPQ As Long, ByVal lpBuffer As String, ByVal dwBufferLength As Long) As Boolean
         [DllImport("SFmpq.dll")]
@@ -473,10 +474,10 @@ namespace MazeMaker
 
         //Declare Function SFileSetFilePointer Lib "SFmpq.dll" (ByVal hFile As Long, ByVal lDistanceToMove As Long, lplDistanceToMoveHigh As Long, ByVal dwMoveMethod As Long) As Long
         [DllImport("SFmpq.dll")]
-        public static extern long SFileSetFilePointer(long hFile, long lDistanceToMove, long lplDistanceToMoveHigh, long dwMoveMethod);
+        public static extern long SFileSetFilePointer(int hFile, long lDistanceToMove, long lplDistanceToMoveHigh, long dwMoveMethod);
         //Declare Function SFileReadFile Lib "SFmpq.dll" (ByVal hFile As Long, ByRef lpBuffer As Any, ByVal nNumberOfBytesToRead As Long, lpNumberOfBytesRead As Long, ByRef lpOverlapped As Any) As Boolean
         [DllImport("SFmpq.dll")]
-        public static extern bool SFileReadFile(long hFile, ref dynamic lpBuffer,long nNumberOfBytesToRead,long lpNumberOfBytesRead,ref dynamic lpOverlapped);
+        public static extern bool SFileReadFile(int hFile, byte[] lpBuffer,int nNumberOfBytesToRead,int lpNumberOfBytesRead, ref dynamic lpOverlapped);
 
         //Declare Function SFileSetLocale Lib "SFmpq.dll" (ByVal nNewLocale As Long) As Long
         [DllImport("SFmpq.dll")]
@@ -493,7 +494,7 @@ namespace MazeMaker
         //' Extra storm-related functions
         //Declare Function SFileGetFileInfo Lib "SFmpq.dll" (ByVal hFile As Long, ByVal dwInfoType As Long) As Long
         [DllImport("SFmpq.dll")]
-        public static extern bool SFileGetFileInfo(long hFile, long dwInfoType);
+        public static extern bool SFileGetFileInfo(int hFile, long dwInfoType);
 
         //Declare Function SFileSetArchivePriority Lib "SFmpq.dll" (ByVal hMPQ As Long, ByVal dwPriority As Long) As Boolean
         [DllImport("SFmpq.dll")]
@@ -501,7 +502,7 @@ namespace MazeMaker
 
         //Declare Function SFileFindMpqHeader Lib "SFmpq.dll" (ByVal hFile As Long) As Long
         [DllImport("SFmpq.dll")]
-        public static extern bool SFileFindMpqHeader(long hFile);
+        public static extern bool SFileFindMpqHeader(int hFile);
 
         //Declare Function SFileListFiles Lib "SFmpq.dll" (ByVal hMPQ As Long, ByVal lpFileLists As String, ByRef lpListBuffer As FILELISTENTRY, ByVal dwFlags As Long) As Boolean
         [DllImport("SFmpq.dll")]
