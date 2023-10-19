@@ -465,7 +465,7 @@ namespace MazeMaker
 
         //Declare Function SFileGetFileArchive Lib "SFmpq.dll" (ByVal hFile As Long, ByRef hMPQ As Long) As Boolean
         [DllImport("SFmpq.dll")]
-        public static extern bool SFileGetFileArchive(string lpFileName, long hFile);//ByRef hMPQ?
+        public static extern bool SFileGetFileArchive(long hFile, ref int hMPQ);
 
         //Declare Function SFileGetFileName Lib "SFmpq.dll" (ByVal hMPQ As Long, ByVal lpBuffer As String, ByVal dwBufferLength As Long) As Boolean
         [DllImport("SFmpq.dll")]
@@ -476,7 +476,7 @@ namespace MazeMaker
         public static extern long SFileSetFilePointer(string lpFileName, long hFile);//ByRef hMPQ?
         //Declare Function SFileReadFile Lib "SFmpq.dll" (ByVal hFile As Long, ByRef lpBuffer As Any, ByVal nNumberOfBytesToRead As Long, lpNumberOfBytesRead As Long, ByRef lpOverlapped As Any) As Boolean
         [DllImport("SFmpq.dll")]
-        public static extern bool SFileReadFile(long hFile, dynamic lpBuffer,long nNumberOfBytesToRead,long lpNumberOfBytesRead,dynamic lpOverlapped);
+        public static extern bool SFileReadFile(long hFile, ref dynamic lpBuffer,long nNumberOfBytesToRead,long lpNumberOfBytesRead,ref dynamic lpOverlapped);
 
         //Declare Function SFileSetLocale Lib "SFmpq.dll" (ByVal nNewLocale As Long) As Long
         [DllImport("SFmpq.dll")]
