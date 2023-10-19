@@ -184,7 +184,7 @@ namespace MazeMaker
                 listBox1.Items.Add(item);
             }
             string extractPath = "";
-            bool success = wrapperClass.ExportFile(destFile, @"staredit\scenario.chk", newPath);
+            bool success = WrapperMpq.ExportFile(destFile, @"staredit\scenario.chk", newPath);
 
 
             string chkPath = newPath + @"\staredit\scenario.chk";
