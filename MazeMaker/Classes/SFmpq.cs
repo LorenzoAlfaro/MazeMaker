@@ -544,24 +544,31 @@ namespace MazeMaker
         [DllImport("SFmpq.dll", CharSet = CharSet.Unicode)]
         public static extern int MpqOpenArchiveForUpdateEx(
             [MarshalAs(UnmanagedType.BStr)] string lpFileName, int dwFlags,int dwMaximumFilesInArchive,int dwBlockSize);
+
         //Declare Function MpqAddFileToArchiveEx Lib "SFmpq.dll" (ByVal hMPQ As Long, ByVal lpSourceFileName As String, ByVal lpDestFileName As String, ByVal dwFlags As Long, ByVal dwCompressionType As Long, ByVal dwCompressLevel As Long) As Boolean
         [DllImport("SFmpq.dll")]
-        public static extern bool MpqAddFileToArchiveEx(int hMPQ, string lpSourceFileName, string lpDestFileName, long dwFlags, long dwCompressionType);
+        public static extern bool MpqAddFileToArchiveEx(int hMPQ, string lpSourceFileName, string lpDestFileName, long dwFlags, long dwCompressionType, long dwCompressLevel);
+
         //Declare Function MpqAddFileFromBufferEx Lib "SFmpq.dll" (ByVal hMPQ As Long, ByRef lpBuffer As Any, ByVal dwLength As Long, ByVal lpFileName As String, ByVal dwFlags As Long, ByVal dwCompressionType As Long, ByVal dwCompressLevel As Long) As Boolean
         [DllImport("SFmpq.dll")]
-        public static extern bool MpqAddFileFromBufferEx(int hMPQ, dynamic lpBuffer, long dwLength, string lpFileName, long dwFlags, long dwCompressionType, long dwCompressLevel);
+        public static extern bool MpqAddFileFromBufferEx(int hMPQ, ref dynamic lpBuffer, long dwLength, string lpFileName, long dwFlags, long dwCompressionType, long dwCompressLevel);
+
         //Declare Function MpqAddFileFromBuffer Lib "SFmpq.dll" (ByVal hMPQ As Long, ByRef lpBuffer As Any, ByVal dwLength As Long, ByVal lpFileName As String, ByVal dwFlags As Long) As Boolean
         [DllImport("SFmpq.dll")]
-        public static extern bool MpqAddFileFromBuffer(int hMPQ, dynamic lpBuffer, long dwLength, string lpFileName, long dwFlags);
+        public static extern bool MpqAddFileFromBuffer(int hMPQ, ref dynamic lpBuffer, long dwLength, string lpFileName, long dwFlags);
+
         //Declare Function MpqAddWaveFromBuffer Lib "SFmpq.dll" (ByVal hMPQ As Long, ByRef lpBuffer As Any, ByVal dwLength As Long, ByVal lpFileName As String, ByVal dwFlags As Long, ByVal dwQuality As Long) As Boolean
         [DllImport("SFmpq.dll")]
-        public static extern bool MpqAddWaveFromBuffer(int hMPQ, dynamic lpBuffer, long dwLength, string lpFileName, long dwFlags, long dwQuality);
+        public static extern bool MpqAddWaveFromBuffer(int hMPQ, ref dynamic lpBuffer, long dwLength, string lpFileName, long dwFlags, long dwQuality);
+
         //Declare Function MpqRenameAndSetFileLocale Lib "SFmpq.dll" (ByVal hMPQ As Long, ByVal lpcOldFileName As String, ByVal lpcNewFileName As String, ByVal nOldLocale As Long, ByVal nNewLocale As Long) As Boolean
         [DllImport("SFmpq.dll")]
         public static extern bool MpqRenameAndSetFileLocale(int hMPQ, string lpcOldFileName, string lpcNewFileName, long nOldLocale, long nNewLocale);
+
         //Declare Function MpqDeleteFileWithLocale Lib "SFmpq.dll" (ByVal hMPQ As Long, ByVal lpFileName As String, ByVal nLocale As Long) As Boolean
         [DllImport("SFmpq.dll")]
-        public static extern bool MpqDeleteFileWithLocale(int hMPQ, string lpFileName, long nLocale);//ByRef hMPQ?
+        public static extern bool MpqDeleteFileWithLocale(int hMPQ, string lpFileName, long nLocale);
+
         //Declare Function MpqSetFileLocale Lib "SFmpq.dll" (ByVal hMPQ As Long, ByVal lpFileName As String, ByVal nOldLocale As Long, ByVal nNewLocale As Long) As Boolean
         [DllImport("SFmpq.dll")]
         public static extern bool MpqSetFileLocale(int hMPQ, string lpFileName, long nOldLocale, long nNewLocale);
