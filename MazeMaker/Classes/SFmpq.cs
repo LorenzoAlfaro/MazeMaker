@@ -618,6 +618,6 @@ namespace MazeMaker
         //        Exit Function
         //    End If
         //    SFMpqCompareVersion = 0
-        //End Function        
+        //End Function
     }
 }
