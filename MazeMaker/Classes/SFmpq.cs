@@ -523,7 +523,7 @@ namespace MazeMaker
 
         //Declare Function MpqAddWaveToArchive Lib "SFmpq.dll" (ByVal hMPQ As Long, ByVal lpSourceFileName As String, ByVal lpDestFileName As String, ByVal dwFlags As Long, ByVal dwQuality As Long) As Boolean
         [DllImport("SFmpq.dll", CharSet = CharSet.Unicode)]
-        public static extern bool MpqAddWaveToArchive(int hMPQ, [MarshalAs(UnmanagedType.BStr)] string lpSourceFileName, [MarshalAs(UnmanagedType.BStr)] string lpDestFileName, int dwFlags, int dwQuality);
+        public static extern bool MpqAddWaveToArchive(int hMPQ, [MarshalAs(UnmanagedType.LPStr)] string lpSourceFileName, [MarshalAs(UnmanagedType.LPStr)] string lpDestFileName, int dwFlags, int dwQuality);
 
         //Declare Function MpqRenameFile Lib "SFmpq.dll" (ByVal hMPQ As Long, ByVal lpcOldFileName As String, ByVal lpcNewFileName As String) As Boolean
         [DllImport("SFmpq.dll")]
@@ -531,8 +531,7 @@ namespace MazeMaker
 
         //Declare Function MpqDeleteFile Lib "SFmpq.dll" (ByVal hMPQ As Long, ByVal lpFileName As String) As Boolean
         [DllImport("SFmpq.dll", CharSet = CharSet.Unicode)]
-        public static extern bool MpqDeleteFile(int hMPQ,
-            [MarshalAs(UnmanagedType.BStr)]  string lpFileName);
+        public static extern bool MpqDeleteFile(int hMPQ, [MarshalAs(UnmanagedType.LPStr)] string lpFileName);
 
         //Declare Function MpqCompactArchive Lib "SFmpq.dll" (ByVal hMPQ As Long) As Boolean
         [DllImport("SFmpq.dll")]
@@ -544,7 +543,7 @@ namespace MazeMaker
         //Declare Function MpqOpenArchiveForUpdateEx Lib "SFmpq.dll" (ByVal lpFileName As String, ByVal dwFlags As Long, ByVal dwMaximumFilesInArchive As Long, ByVal dwBlockSize As Long) As Long
         [DllImport("SFmpq.dll", CharSet = CharSet.Unicode)]
         public static extern int MpqOpenArchiveForUpdateEx(
-            [MarshalAs(UnmanagedType.BStr)] string lpFileName, int dwFlags,int dwMaximumFilesInArchive,int dwBlockSize);
+            [MarshalAs(UnmanagedType.LPStr)] string lpFileName, int dwFlags,int dwMaximumFilesInArchive,int dwBlockSize);
 
         //Declare Function MpqAddFileToArchiveEx Lib "SFmpq.dll" (ByVal hMPQ As Long, ByVal lpSourceFileName As String, ByVal lpDestFileName As String, ByVal dwFlags As Long, ByVal dwCompressionType As Long, ByVal dwCompressLevel As Long) As Boolean
         [DllImport("SFmpq.dll", CharSet = CharSet.Ansi)]
