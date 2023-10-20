@@ -7,7 +7,6 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Text;
 
-using VB6Wrapper;
 
 namespace MazeMaker
 {
@@ -18,7 +17,6 @@ namespace MazeMaker
         Random random = new Random();
         private ByteViewer byteviewer;
         int blocksFilled = 0;
-        Wrapper wrapperClass;
         string map = "";
         List<int[]> openTiles = new List<int[]>();
         int hMPQ = 0; //handle to MPQ
@@ -26,7 +24,6 @@ namespace MazeMaker
         public Form1()
         {
             LoadingTimer.Tick += new EventHandler(TimerEventProcessor);
-            wrapperClass = new Wrapper();
             InitializeComponent();
             //loadByteViewer();
         }
@@ -178,12 +175,6 @@ namespace MazeMaker
 
             File.Copy(sourceFile, destFile, true);
 
-            dynamic files = wrapperClass.ListFiles(destFile);//.Item(1);
-            foreach (var item in files)
-            {
-                listBox1.Items.Add(item);
-            }
-            string extractPath = "";
             bool success = WrapperMpq.ExportFile(destFile, @"staredit\scenario.chk", newPath);
 
 
