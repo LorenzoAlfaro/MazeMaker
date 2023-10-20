@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -283,13 +283,13 @@ namespace MazeMaker
         public const long MAFA_ENCRYPT = 0x10000;
 
         //Public Const MAFA_COMPRESS As Long = &H200
-        public const long MAFA_COMPRESS = 0x200;
+        public const int MAFA_COMPRESS = 0x200;
 
         //Public Const MAFA_COMPRESS2 As Long = &H100
         public const long MAFA_COMPRESS2 = 0x100;
 
         //Public Const MAFA_REPLACE_EXISTING As Long = &H1
-        public const long MAFA_REPLACE_EXISTING = 0x1;
+        public const int MAFA_REPLACE_EXISTING = 0x1;
 
         //' MpqAddFileToArchiveEx compression flags
         //Public Const MAFA_COMPRESS_STANDARD As Long = &H8 'Standard PKWare DCL compression

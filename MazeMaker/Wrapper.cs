@@ -116,6 +116,31 @@ namespace MazeMaker
             }
         }
 
+        public static void ImportFile(string MPQPath, string FilePath)
+        {
+            int hMPQ = 0;
+
+            hMPQ = mOpenMPQ(MPQPath);
+
+            int dwFlags = SFmpq.MAFA_REPLACE_EXISTING;
+
+            mAddAutoFile(hMPQ, FilePath, @"staredit\scenario.chk", dwFlags);
+
+            SFmpq.MpqCloseUpdatedArchive(hMPQ, 0);
+
+            SFmpq.SFileOpenArchive(MPQPath, 0, 0, ref hMPQ);
+
+            SFmpq.SFileCloseArchive(hMPQ);
+        }
+
+        public static void mAddAutoFile(int hMPQ, string File, string MPQPath, int dwFlags)
+        {
+            //SFmpq.MpqAddFileToArchiveEx(hMPQ, File, MPQPath, dwFlags, 0, 0);
+
+            SFmpq.MpqAddWaveToArchive(hMPQ, File, MPQPath, dwFlags | SFmpq.MAFA_COMPRESS, 0);
+
+        }
+
         //List.ListItems.Item(fNum).ListSubItems(4).Tag = 0
         //bool success = wrapperClass.DeleteFile(mazePath, listBox1.SelectedItem.ToString());
 
