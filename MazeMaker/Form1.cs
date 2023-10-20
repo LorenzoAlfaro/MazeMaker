@@ -235,9 +235,14 @@ namespace MazeMaker
 
             int success2 = WrapperMpq.DeleteFile(destFile, @"staredit\scenario.chk");
 
-            wrapperClass.ImportFile(destFile, chkPath);
+            //wrapperClass.ImportFile(destFile, chkPath);
+            WrapperMpq.ImportFile(destFile, chkPath);
 
-            File.Move(destFile, Environment.ExpandEnvironmentVariables(@"C:\Users\%USERNAME%\Documents\StarCraft\Maps\Download\Muestras")+ "\\" + fileName + "-"+ DateTime.Now.ToString("HH:mm:ss").Replace(":","-") + ext);
+            string time_date = DateTime.Now.ToString("HH:mm:ss").Replace(":", "-");
+
+            string destFilePath = Environment.ExpandEnvironmentVariables($@"C:\Users\%USERNAME%\Documents\StarCraft\Maps\Download\Muestras\{fileName}-{time_date}{ext}");
+
+            File.Move(destFile, destFilePath);
             //C:\Users\loren\Documents\StarCraft\Maps\Download\Muestras
         }
         private void button1_Click(object sender, EventArgs e)

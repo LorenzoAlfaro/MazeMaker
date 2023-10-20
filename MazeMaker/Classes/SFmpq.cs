@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -522,8 +522,8 @@ namespace MazeMaker
         public static extern bool MpqAddFileToArchive(int hMPQ, string lpSourceFileName, string lpDestFileName, long dwFlags);
 
         //Declare Function MpqAddWaveToArchive Lib "SFmpq.dll" (ByVal hMPQ As Long, ByVal lpSourceFileName As String, ByVal lpDestFileName As String, ByVal dwFlags As Long, ByVal dwQuality As Long) As Boolean
-        [DllImport("SFmpq.dll")]
-        public static extern bool MpqAddWaveToArchive(int hMPQ, string lpSourceFileName,string lpDestFileName, long dwFlags,long dwQuality);
+        [DllImport("SFmpq.dll", CharSet = CharSet.Unicode)]
+        public static extern bool MpqAddWaveToArchive(int hMPQ, [MarshalAs(UnmanagedType.BStr)] string lpSourceFileName, [MarshalAs(UnmanagedType.BStr)] string lpDestFileName, int dwFlags, int dwQuality);
 
         //Declare Function MpqRenameFile Lib "SFmpq.dll" (ByVal hMPQ As Long, ByVal lpcOldFileName As String, ByVal lpcNewFileName As String) As Boolean
         [DllImport("SFmpq.dll")]
@@ -547,8 +547,8 @@ namespace MazeMaker
             [MarshalAs(UnmanagedType.BStr)] string lpFileName, int dwFlags,int dwMaximumFilesInArchive,int dwBlockSize);
 
         //Declare Function MpqAddFileToArchiveEx Lib "SFmpq.dll" (ByVal hMPQ As Long, ByVal lpSourceFileName As String, ByVal lpDestFileName As String, ByVal dwFlags As Long, ByVal dwCompressionType As Long, ByVal dwCompressLevel As Long) As Boolean
-        [DllImport("SFmpq.dll")]
-        public static extern bool MpqAddFileToArchiveEx(int hMPQ, string lpSourceFileName, string lpDestFileName, long dwFlags, long dwCompressionType, long dwCompressLevel);
+        [DllImport("SFmpq.dll", CharSet = CharSet.Ansi)]
+        public static extern bool MpqAddFileToArchiveEx(int hMPQ, string lpSourceFileName, string lpDestFileName, int dwFlags, int dwCompressionType, int dwCompressLevel);
 
         //Declare Function MpqAddFileFromBufferEx Lib "SFmpq.dll" (ByVal hMPQ As Long, ByRef lpBuffer As Any, ByVal dwLength As Long, ByVal lpFileName As String, ByVal dwFlags As Long, ByVal dwCompressionType As Long, ByVal dwCompressLevel As Long) As Boolean
         [DllImport("SFmpq.dll")]
