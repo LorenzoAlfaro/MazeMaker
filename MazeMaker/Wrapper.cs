@@ -24,8 +24,8 @@ namespace MazeMaker
 
         public static int mOpenMPQ(string FileName)
         {
-            int DefaultMaxFiles = 1024;
-            int DefaultBlockSize = 3;
+            int DefaultMaxFiles = 0;
+            int DefaultBlockSize = 0;
 
             int hMPQ = SFmpq.MpqOpenArchiveForUpdateEx(FileName, SFmpq.MOAU_OPEN_EXISTING | SFmpq.MOAU_MAINTAIN_LISTFILE, DefaultMaxFiles, DefaultBlockSize);
 
@@ -125,10 +125,6 @@ namespace MazeMaker
             int dwFlags = SFmpq.MAFA_REPLACE_EXISTING;
 
             mAddAutoFile(hMPQ, FilePath, @"staredit\scenario.chk", dwFlags);
-
-            SFmpq.MpqCloseUpdatedArchive(hMPQ, 0);
-
-            SFmpq.SFileOpenArchive(MPQPath, 0, 0, ref hMPQ);
 
             SFmpq.SFileCloseArchive(hMPQ);
         }
