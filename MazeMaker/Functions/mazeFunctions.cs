@@ -9,14 +9,15 @@ namespace MazeMaker
 {
     public class Location
     {
-        public int leftX;//u32
-        public int topY;//u32
-        public int rightX;//u32
+        public int leftX; //u32
+        public int topY; //u32
+        public int rightX; //u32
         public int bottY;
-        public Int16 stringNumber;//u16
-        public Int16 flags;//u16     
+        public Int16 stringNumber; //u16
+        public Int16 flags; //u16
         public long offSet;
-        //4+4+4+4+2+2=20
+        // Location is 20 bytes
+        // 4+4+4+4+2+2=20
     }
 
     public class Unit
@@ -37,86 +38,99 @@ namespace MazeMaker
         public Int16 unitFlags;
         public int unused;
         public int AddonNydusLink;
-        public long offSet;       
+        public long offSet;
     }
     public static class mazeFunctions
-    {        
-        public static Task<bool[,]> startMazeAsync (bool[,] maze, List<int[]> startWorm, int size, Random random, ref int blocksFilled, bool regionOrCorridors, int width, int height)
+    {
+        public static Task<bool[,]> startMazeAsync(bool[,] maze, List<int[]> startWorm, int size, Random random,
+                                                   ref int blocksFilled, bool regionOrCorridors, int width, int height)
         {
-            return Task.FromResult(startMaze(maze, startWorm, size, random, ref blocksFilled, regionOrCorridors,width,height));//basically a wrapper to make this file async
+            // Task wrapper for the function
+            return Task.FromResult(startMaze(maze, startWorm, size, random, ref blocksFilled, regionOrCorridors, width, height));
         }
-        public static bool[,] startMaze(bool[,] maze, List<int[]> startWorm, int size, Random random, ref int blocksFilled, bool regionOrCorridors, int width,int height)
+
+        static bool[,] startMaze(bool[,] maze, List<int[]> startWorm, int size, Random random,
+                                 ref int blocksFilled, bool regionOrCorridors, int width, int height)
         {
-            int[] startPoint;//the main function that fills a boolean array to create a maze
-            if (startWorm.Count!=0)
+            // The main function that fills a boolean array to create a maze
+            int[] startPoint;
+            if (startWorm.Count != 0)
             {
                 startPoint = startWorm[random.Next(startWorm.Count)];
-                //startWorm[random.Next(startWorm.Count)].CopyTo(startPoint,0);
+                // startWorm[random.Next(startWorm.Count)].CopyTo(startPoint,0);
             }
             else
             {
                 startPoint = new int[2] { random.Next(height), random.Next(width) };
                 startWorm.Add(startPoint);
             }
-                                                 
-            maze[startPoint[0], startPoint[1]] = true;                        
-            
+
+            maze[startPoint[0], startPoint[1]] = true;
+
             int loops = 0;
+
+            // This function may never end, so I'm stopping at 8000
             while (startWorm.Count < size & loops < 8000)
-            {                                
-                int[] newTile = nextTile(startPoint, maze, startWorm, random, regionOrCorridors,width,height);                
+            {
+                int[] newTile = nextTile(startPoint, maze, startWorm, random, regionOrCorridors, width, height);
                 if (!startWorm.Exists(x => x[0] == newTile[0] & x[1] == newTile[1]))
                 {
-                    if (newTile[0] != startPoint[0] ^ newTile[1] != startPoint[1]) //XOR
+                    if (newTile[0] != startPoint[0] ^ newTile[1] != startPoint[1]) // XOR
                     {
-                        newTile.CopyTo(startPoint, 0);                        
+                        newTile.CopyTo(startPoint, 0);
                         startWorm.Add(newTile);
                     }
                 }
-                blocksFilled = startWorm.Count;//use to report to the outside world my progress
+                // Use to report to the outside world my progress.
+                blocksFilled = startWorm.Count;
                 loops += 1;
             }
 
             if (startWorm.Count < size)
             {
-                maze = startMaze(maze, startWorm, size, random, ref blocksFilled, regionOrCorridors, width,height);
+                maze = startMaze(maze, startWorm, size, random, ref blocksFilled, regionOrCorridors, width, height);
             }
-            return maze;            
+
+            return maze;
         }
-        public static int[] nextTile(int[] currentTile, bool[,] maze, List<int[]> startWorm, Random random, bool regionOrCorridors, int width, int height)
-        {            
+
+        static int[] nextTile(int[] currentTile, bool[,] maze, List<int[]> startWorm, Random random,
+                              bool regionOrCorridors, int width, int height)
+        {
             int[] tempTile = new int[2];
-            currentTile.CopyTo(tempTile, 0);                        
-            
+            currentTile.CopyTo(tempTile, 0);
+
             int direction = random.Next(4);
             bool upDown = false;
-            if (direction == 0) //up
+            if (direction == 0) // up
             {
                 upDown = true;
-                tempTile[0] = currentTile[0] - 1;                
+                tempTile[0] = currentTile[0] - 1;
             }
-            else if (direction == 1) //down
+            else if (direction == 1) // down
             {
                 upDown = true;
-                tempTile[0] = currentTile[0] + 1;                
+                tempTile[0] = currentTile[0] + 1;
             }
-            else if (direction == 2) //left
+            else if (direction == 2) // left
             {
-                tempTile[1] = currentTile[1] - 1;                
+                tempTile[1] = currentTile[1] - 1;
             }
-            else if (direction == 3) //right
+            else if (direction == 3) // right
             {
-                tempTile[1] = currentTile[1] + 1;                
+                tempTile[1] = currentTile[1] + 1;
             }
-            //check boundaries
 
-            if (tempTile[0] < 0 | tempTile[0] > (height-1) | tempTile[1] < 0 | tempTile[1] > (width - 1))
+            // Check boundaries
+
+            if (tempTile[0] < 0 | tempTile[0] > (height - 1) | tempTile[1] < 0 | tempTile[1] > (width - 1))
             {
                 currentTile.CopyTo(tempTile, 0);
                 return tempTile;
             }
 
-            if (!maze[tempTile[0], tempTile[1]])//is it already been change?
+            // Has it already been changed?
+            if (!maze[tempTile[0], tempTile[1]])
             {
                 if (upDown)
                 {
@@ -129,15 +143,16 @@ namespace MazeMaker
                 else
                 {
                     if (checkUpDown(tempTile, maze, regionOrCorridors, height))
-                    { 
+                    {
                         maze[tempTile[0], tempTile[1]] = true;
                         return tempTile;
                     }
-                }                                
+                }
             }
             currentTile.CopyTo(tempTile, 0);
-            return tempTile;            
+            return tempTile;
         }
+
         public static bool checkLeftRight(int[] tile, bool[,] maze, bool regionsOrCorridors, int width)
         {
             bool leftEmpty = false;
@@ -158,7 +173,7 @@ namespace MazeMaker
                 return rightEmpty | leftEmpty;
             }
             return rightEmpty & leftEmpty;
-                        
+
         }
         public static bool checkUpDown(int[] tile, bool[,] maze, bool regionsOrCorridors, int height)
         {
@@ -171,121 +186,18 @@ namespace MazeMaker
             }
             if (tile[0] - 1 > 0)
             {
-                upEmpty = !maze[tile[0] -1, tile[1]];
+                upEmpty = !maze[tile[0] - 1, tile[1]];
             }
+
+            // 'Or' makes a very spaced out maze
+            // 'And' makes it more a checkboard pattern
             if (regionsOrCorridors)
             {
-                return downEmpty | upEmpty;   // Or makes it very spaced out, and makes it more checkboard pattern         
+                return downEmpty | upEmpty;
             }
-            return downEmpty & upEmpty;   // Or makes it very spaced out, and makes it more checkboard pattern         
+            return downEmpty & upEmpty;
         }
-        //public static int[] nextTileOld(int[] currentTile, bool[,] maze, List<int[]> startWorm, Random random)
-        //{
-        //    int[] nextTile = new int[2];
-        //    currentTile.CopyTo(nextTile, 0);
 
-        //    int[] tempTile = new int[2];
-        //    nextTile.CopyTo(tempTile, 0);
-
-        //    int direction = random.Next(4);
-
-        //    if (direction == 0) //up
-        //    {
-        //        tempTile[0] = nextTile[0] - 1;
-
-        //        if (tempTile[0] < 0)
-        //        {
-        //            return currentTile;
-        //        }
-
-        //        if (!maze[tempTile[0], tempTile[1]])
-        //        {
-        //            if (checkLeftRight(tempTile, maze))
-        //            {
-        //                maze[tempTile[0], tempTile[1]] = true;
-        //                return tempTile;
-        //            }
-        //            else
-        //            {
-        //                tempTile = startWorm[random.Next(startWorm.Count)];
-        //                return tempTile;
-        //            }
-        //        }
-        //    }
-        //    else if (direction == 1) //down
-        //    {
-        //        tempTile[0] = nextTile[0] + 1;
-
-        //        if (tempTile[0] > 63)
-        //        {
-        //            return currentTile;
-        //        }
-
-        //        if (!maze[tempTile[0], tempTile[1]])
-        //        {
-        //            if (checkLeftRight(tempTile, maze))
-        //            {
-        //                maze[tempTile[0], tempTile[1]] = true;
-        //                return tempTile;
-        //            }
-        //            else
-        //            {
-        //                tempTile = startWorm[random.Next(startWorm.Count)];
-        //                return tempTile;
-        //            }
-
-        //        }
-        //    }
-        //    else if (direction == 2) //left
-        //    {
-        //        tempTile[1] = nextTile[1] - 1;
-
-        //        if (tempTile[1] < 0)
-        //        {
-        //            return currentTile;
-        //        }
-
-        //        if (!maze[tempTile[0], tempTile[1]])
-        //        {
-        //            if (checkUpDown(tempTile, maze))
-        //            {
-        //                maze[tempTile[0], tempTile[1]] = true;
-        //                return tempTile;
-        //            }
-        //            else
-        //            {
-        //                tempTile = startWorm[random.Next(startWorm.Count)];
-        //                return tempTile;
-        //            }
-        //        }
-        //    }
-        //    else if (direction == 3) //right
-        //    {
-        //        tempTile[1] = nextTile[1] + 1;
-
-        //        if (tempTile[1] > 63)
-        //        {
-        //            return currentTile;
-        //        }
-
-        //        if (!maze[tempTile[0], tempTile[1]])
-        //        {
-        //            if (checkUpDown(tempTile, maze))
-        //            {
-        //                maze[tempTile[0], tempTile[1]] = true;
-        //                return tempTile;
-        //            }
-        //            else
-        //            {
-        //                tempTile = startWorm[random.Next(startWorm.Count)];
-        //                return tempTile;
-        //            }
-        //        }
-        //    }
-        //    tempTile = startWorm[random.Next(startWorm.Count)];
-
-        //    return tempTile;
-        //}
         public static string mazeToString(bool[,] maze, int width, int height)
         {
             string mazeStr = "";
@@ -295,22 +207,25 @@ namespace MazeMaker
                 {
                     if (maze[i, j])
                     {
-                        mazeStr += "2600"; //low ground
+                        mazeStr += "2600"; // low ground
                     }
                     else
                     {
-                        
                         mazeStr += "6603";
                     }
                 }
             }
             return mazeStr;
         }
+
         public static string createMap(Random random)
         {
-            string HG = "6603";
-            string LG = "4400";
-            string W = "2600";
+            // This values come from experimenting with different tiles
+            // in the map editor.
+
+            const string HG = "6603";
+            const string LG = "4400";
+            const string W = "2600";
             string[] tiles = new string[] { HG, LG, W };
             string result = "";
             for (int i = 0; i < 64; i++)
@@ -322,11 +237,12 @@ namespace MazeMaker
             }
             return result;
         }
+
         public static int mapWidth(FileStream fs)
         {
             fs.Position = 0;
-            long offSet = BO.findPattern(Encoding.ASCII.GetBytes("DIM "),fs);
-            int size = BO.readInt32(fs);            
+            long offSet = BO.findPattern(Encoding.ASCII.GetBytes("DIM "), fs);
+            int size = BO.readInt32(fs);
             return BO.readInt16(fs);
         }
         public static int mapHeight(FileStream fs)
@@ -334,7 +250,7 @@ namespace MazeMaker
             fs.Position = 0;
             long offSet = BO.findPattern(Encoding.ASCII.GetBytes("DIM "), fs);
             int size = BO.readInt32(fs);
-            BO.readInt16(fs);//            
+            BO.readInt16(fs);
             return BO.readInt16(fs);
         }
 
@@ -361,12 +277,15 @@ namespace MazeMaker
             {
                 StarcraftObj.updateUnit(Units[i], fs);
             }
-        }        
-        public static void updateLocations(FileStream fs, List<int[]>openTiles,Random random)
+        }
+
+        public static void updateLocations(FileStream fs, List<int[]> openTiles, Random random)
         {
             fs.Position = 0;
             BO.findPattern(Encoding.ASCII.GetBytes("MRGN"), fs);
-            fs.Position = fs.Position + 4;//skip the section size 4 bytes
+
+            // Skip the section size 4 bytes
+            fs.Position = fs.Position + 4;
 
             List<Location> myLocations = new List<Location>();
             for (int i = 0; i < 255; i++)
@@ -391,6 +310,5 @@ namespace MazeMaker
                 StarcraftObj.updateLocation(loc, fs);
             }
         }
-        
     }
 }
