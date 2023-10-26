@@ -1,27 +1,10 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.InteropServices;
 
 namespace MazeMaker
 {
     public static class WrapperMpq
-    {
-
-        //string mazePath = Environment.ExpandEnvironmentVariables(@"C:\Users\%USERNAME%\Dropbox\VIDEO GAMES\SC MAPS\MPQExport\Maze.scm");
-        //string extractPath = Environment.ExpandEnvironmentVariables(@"C:\Users\%USERNAME%\Dropbox\VIDEO GAMES\SC MAPS\MPQExport");
-
-        [DllImport("Called.dll", CharSet = CharSet.Unicode)]
-        public static extern string FunctionCalled([MarshalAs(UnmanagedType.BStr)] string input); //LPWstr return first three letters
-        //AnsBStr gets "敨汬o"
-        //LPTStr gets "hel"
-        //BStr gets "hello"
-        //TBStr gets "hello"
-        //AnsiBStr gets "hello"
-
-        [DllImport("Called.dll", CharSet = CharSet.Unicode)]
-        public static extern string FunctionCalled2([MarshalAs(UnmanagedType.AnsiBStr)] string input);
-
-
+    {                        
         public static int mOpenMPQ(string FileName)
         {
             int DefaultMaxFiles = 0;
@@ -53,14 +36,7 @@ namespace MazeMaker
             return SFmpq.MpqCloseUpdatedArchive(hMPQ, 0);
 
         }
-
-        public static void ListFiles(string Path, int hMPQ)
-        {
-            SFmpq.SFileOpenArchive(Path, 0, 0, ref hMPQ);
-
-
-        }
-
+        
         public static bool ExportFile(string MPQPath, string extractedFile, string saveFilePath)
         {
             int fNum;
@@ -109,18 +85,13 @@ namespace MazeMaker
                 }
 
                 FileName = $@"{OutPath}\{FileName}";
-
-
                 File.WriteAllBytes(FileName, buffer);
-
             }
         }
 
         public static void ImportFile(string MPQPath, string FilePath)
-        {
-            int hMPQ = 0;
-
-            hMPQ = mOpenMPQ(MPQPath);
+        {            
+            int hMPQ = mOpenMPQ(MPQPath);
 
             int dwFlags = SFmpq.MAFA_REPLACE_EXISTING;
 
@@ -130,40 +101,8 @@ namespace MazeMaker
         }
 
         public static void mAddAutoFile(int hMPQ, string File, string MPQPath, int dwFlags)
-        {
-            //SFmpq.MpqAddFileToArchiveEx(hMPQ, File, MPQPath, dwFlags, 0, 0);
-
+        {            
             SFmpq.MpqAddWaveToArchive(hMPQ, File, MPQPath, dwFlags | SFmpq.MAFA_COMPRESS, 0);
-
-        }
-
-        //List.ListItems.Item(fNum).ListSubItems(4).Tag = 0
-        //bool success = wrapperClass.DeleteFile(mazePath, listBox1.SelectedItem.ToString());
-
-        //= Classes.SFmpq.MpqDeleteFile(hMPQ, listBox1.SelectedItem.ToString());
-
-        //int value =  Classes.SFmpq.MpqCloseUpdatedArchive(hMPQ,0)
-
-
-        //wrapperClass.ImportFile(mazePath, "");
-        //bool success = wrapperClass.ExportFile(mazePath, files.Item(2), extractPath);
-        //bool success = wrapperClass.ExportFile(mazePath, listBox1.SelectedItem.ToString(), extractPath);
-
-
-        //string hello = FunctionCalled2("hello");
-        //MazeMaker.Classes.SFmpq.AboutSFMpq();
-        //string version = Classes.SFmpq.MpqGetVersionString();
-        //string value = "dfdf";
-
-        //dynamic files = wrapperClass.ListFiles(mazePath);//.Item(1);
-        //foreach (var item in files)
-        //{
-        //    listBox1.Items.Add(item);
-        //}
-        //bool success = Classes.SFmpq.SFileOpenArchive(mazePath, 0, 0, ref hMPQ);
-        //List<FILELISTENTRY> ListedFiles = new List<FILELISTENTRY>();
-
-
-        //bool close = Classes.SFmpq.SFileCloseArchive(hMPQ); //call when finish the file
+        }        
     }
 }
