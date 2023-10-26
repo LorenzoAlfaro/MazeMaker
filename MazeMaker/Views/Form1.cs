@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.ComponentModel.Design;
@@ -14,18 +14,18 @@ namespace MazeMaker
     {
         Controller Controller = new Controller();
 
-        public Timer LoadingTimer = new Timer();//Timer to give feedback to the user when something takes a long time to run
-        public bool waiting = false; //when something is waiting an async response use this
-        Random random = new Random();
-        private ByteViewer byteviewer;
-        int blocksFilled = 0;
-        string map = "";
-        List<int[]> openTiles = new List<int[]>();
-        int hMPQ = 0; //handle to MPQ
-
         Model model = Model.Instance();
 
+        // Provide feedback to the user when waiting
+        public Timer LoadingTimer = new Timer();
 
+        // When something is waiting an async response use this
+        public bool waiting = false; 
+        
+        Random random = new Random();
+        
+        private ByteViewer byteviewer;
+                                      
         public Form1()
         {
             LoadingTimer.Tick += new EventHandler(TimerEventProcessor);
@@ -77,8 +77,7 @@ namespace MazeMaker
             myButton.Text = "Loading";
             myButton.Enabled = false;
             LoadingTimer.Interval = 500;
-            LoadingTimer.Start();
-            Console.WriteLine("Timer1");
+            LoadingTimer.Start();            
         }
         public void doneWaiting(Button button, string previousBttnLabel)
         {
@@ -103,59 +102,7 @@ namespace MazeMaker
                 return;
             byteviewer.SetFile(ofd.FileName);
         }
-        private async void button6_Click(object sender, EventArgs e)//create file
-        {
-            openTiles.Clear();
-
-            OpenFileDialog ofd = new OpenFileDialog();
-            if (ofd.ShowDialog() != DialogResult.OK)
-                return;
-
-
-            Button myButton = (Button)sender;
-            string label = myButton.Text;
-
-            try
-            {
-                readyToWait(myButton);
-                int height;
-                int width;
-                using (var fs = new FileStream(ofd.FileName, FileMode.Open, FileAccess.ReadWrite))
-                {
-
-                    width = mazeFunctions.mapWidth(fs);
-                    height = mazeFunctions.mapHeight(fs);
-
-                }
-                bool[,] maze = new bool[height, width];
-                map = mazeFunctions.mazeToString(await Task.Run(() => mazeFunctions.startMazeAsync(maze, openTiles, (width * height / 2), random, ref blocksFilled, checkBox1.Checked, width, height)), width, height);
-
-
-
-                bool success = BO.ByteArrayToFile(ofd.FileName, BO.StringToByteArray(map),
-                 BO.findOffset(new byte[] { 0x4d, 0x54, 0x58, 0x4d }, ofd.FileName));//MTXM broodwar reads, 0x04A2
-                success = BO.ByteArrayToFile(ofd.FileName, BO.StringToByteArray(map),
-                 BO.findOffset(new byte[] { 0x54, 0x49, 0x4c, 0x45 }, ofd.FileName));//TILE staredit 0x24AA
-
-
-            }
-            catch (Exception err)
-            {
-                throw err;
-                //Console.WriteLine("failed creating map " + err.Message);
-            }
-            finally
-            {
-                doneWaiting(myButton, label);
-            }
-
-            using (var fs = new FileStream(ofd.FileName, FileMode.Open, FileAccess.ReadWrite))
-            {
-                mazeFunctions.updateUnits(fs, openTiles, random);
-                mazeFunctions.updateLocations(fs, openTiles, random);
-
-            }
-        }
+        
         private async void button7_Click(object sender, EventArgs e)
         {
 
