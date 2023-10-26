@@ -12,6 +12,8 @@ namespace MazeMaker
 {
     public partial class Form1 : Form
     {
+        Controller Controller = new Controller();
+
         public Timer LoadingTimer = new Timer();//Timer to give feedback to the user when something takes a long time to run
         public bool waiting = false; //when something is waiting an async response use this
         Random random = new Random();
@@ -20,6 +22,9 @@ namespace MazeMaker
         string map = "";
         List<int[]> openTiles = new List<int[]>();
         int hMPQ = 0; //handle to MPQ
+
+        Model model = Model.Instance();
+
 
         public Form1()
         {
@@ -42,7 +47,7 @@ namespace MazeMaker
             if (waiting)
             {
                 myTimer.Stop();
-                label1.Text = blocksFilled.ToString();
+                label1.Text = model.blocksFilled.ToString();
                 if (label9.Text == "Loading.")
                 {
                     label9.Text = "Loading..";
@@ -73,6 +78,7 @@ namespace MazeMaker
             myButton.Enabled = false;
             LoadingTimer.Interval = 500;
             LoadingTimer.Start();
+            Console.WriteLine("Timer1");
         }
         public void doneWaiting(Button button, string previousBttnLabel)
         {
@@ -126,10 +132,10 @@ namespace MazeMaker
 
 
 
-                    bool success = BO.ByteArrayToFile(ofd.FileName, BO.StringToByteArray(map),
-                     BO.findOffset(new byte[] { 0x4d, 0x54, 0x58, 0x4d }, ofd.FileName));//MTXM broodwar reads, 0x04A2
-                    success = BO.ByteArrayToFile(ofd.FileName, BO.StringToByteArray(map),
-                     BO.findOffset(new byte[] { 0x54, 0x49, 0x4c, 0x45 }, ofd.FileName));//TILE staredit 0x24AA
+                bool success = BO.ByteArrayToFile(ofd.FileName, BO.StringToByteArray(map),
+                 BO.findOffset(new byte[] { 0x4d, 0x54, 0x58, 0x4d }, ofd.FileName));//MTXM broodwar reads, 0x04A2
+                success = BO.ByteArrayToFile(ofd.FileName, BO.StringToByteArray(map),
+                 BO.findOffset(new byte[] { 0x54, 0x49, 0x4c, 0x45 }, ofd.FileName));//TILE staredit 0x24AA
 
 
             }
@@ -152,59 +158,17 @@ namespace MazeMaker
         }
         private async void button7_Click(object sender, EventArgs e)//start with a clean .scm file
         {
-            //select a unmodified .scm file
-            // copy the file
-            // extract the .chk file of the clone
-            // delete the .chk file of the clone
-            // transfomr the .chk
-            // import the file .chk to the cloned .scm,
-            // test the map in staredit and starcraft
-            openTiles.Clear();
+
+            Button myButton = (Button)sender;
+            string label = myButton.Text;
             OpenFileDialog ofd = new OpenFileDialog();
             if (ofd.ShowDialog() != DialogResult.OK)
                 return;
 
-            string sourceFile = ofd.FileName;
-            string fileName = Path.GetFileNameWithoutExtension(sourceFile);
-
-            string newPath = Path.GetDirectoryName(sourceFile);
-
-            string ext = Path.GetExtension(sourceFile);
-
-            string destFile = newPath + "\\" + fileName + "-cloned" + ext;
-
-            File.Copy(sourceFile, destFile, true);
-
-            bool success = WrapperMpq.ExportFile(destFile, @"staredit\scenario.chk", newPath);
-
-
-            string chkPath = newPath + @"\staredit\scenario.chk";
-
-            Button myButton = (Button)sender;
-            string label = myButton.Text;
+            readyToWait(myButton);
             try
             {
-                readyToWait(myButton);
-                int height;
-                int width;
-                using (var fs = new FileStream(chkPath, FileMode.Open, FileAccess.ReadWrite))
-                {
-
-                    width = mazeFunctions.mapWidth(fs);
-                    height = mazeFunctions.mapHeight(fs);
-
-                }
-                bool[,] maze = new bool[height, width];
-                map = mazeFunctions.mazeToString(await Task.Run(() => mazeFunctions.startMazeAsync(maze, openTiles, (width * height / 2), random, ref blocksFilled, checkBox1.Checked, width, height)), width, height);
-
-
-
-                success = BO.ByteArrayToFile(chkPath, BO.StringToByteArray(map),
-                 BO.findOffset(new byte[] { 0x4d, 0x54, 0x58, 0x4d }, chkPath));//MTXM broodwar reads, 0x04A2
-                success = BO.ByteArrayToFile(chkPath, BO.StringToByteArray(map),
-                 BO.findOffset(new byte[] { 0x54, 0x49, 0x4c, 0x45 }, chkPath));//TILE staredit 0x24AA
-
-
+                await Controller.CreateNewMap(ofd.FileName);
             }
             catch (Exception err)
             {
@@ -215,26 +179,6 @@ namespace MazeMaker
             {
                 doneWaiting(myButton, label);
             }
-
-            using (var fs = new FileStream(chkPath, FileMode.Open, FileAccess.ReadWrite))
-            {
-                mazeFunctions.updateUnits(fs, openTiles, random);
-                mazeFunctions.updateLocations(fs, openTiles, random);
-
-            }
-
-
-            int success2 = WrapperMpq.DeleteFile(destFile, @"staredit\scenario.chk");
-
-            //wrapperClass.ImportFile(destFile, chkPath);
-            WrapperMpq.ImportFile(destFile, chkPath);
-
-            string time_date = DateTime.Now.ToString("HH:mm:ss").Replace(":", "-");
-
-            string destFilePath = Environment.ExpandEnvironmentVariables($@"C:\Users\%USERNAME%\Documents\StarCraft\Maps\Download\Muestras\{fileName}-{time_date}{ext}");
-
-            File.Move(destFile, destFilePath);
-            //C:\Users\loren\Documents\StarCraft\Maps\Download\Muestras
         }
         private void button1_Click(object sender, EventArgs e)
         {
@@ -243,7 +187,7 @@ namespace MazeMaker
                 return;
             using (var fs = new FileStream(ofd.FileName, FileMode.Open, FileAccess.ReadWrite))
             {
-                textBox2.Text ="0x" + Convert.ToString((BO.findPattern(Encoding.ASCII.GetBytes(textBox1.Text), fs)),16).ToUpper();
+                textBox2.Text = "0x" + Convert.ToString((BO.findPattern(Encoding.ASCII.GetBytes(textBox1.Text), fs)), 16).ToUpper();
                 //fs has its offSet moved to the end of the four bytes label, starting the other 4bytes of the section size, no need to set the offset
                 int j = BO.readInt32(fs);
                 textBox3.Text = j.ToString();
@@ -261,7 +205,7 @@ namespace MazeMaker
             {
 
                 BO.findPattern(Encoding.ASCII.GetBytes("UNIT"), fs);
-                int count = BO.readInt32(fs)/36;
+                int count = BO.readInt32(fs) / 36;
 
                 for (int i = 0; i < count; i++)
                 {
