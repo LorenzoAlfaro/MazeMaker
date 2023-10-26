@@ -15,7 +15,7 @@ namespace MazeMaker
 
         //int blocksFilled = 0;
 
-        public async void CreateNewMap(string sourceFile)
+        public async Task CreateNewMap(string sourceFile)
         {
             // Select a unmodified .scm file
             // copy the file
