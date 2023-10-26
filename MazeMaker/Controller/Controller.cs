@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MazeMaker
@@ -12,8 +9,9 @@ namespace MazeMaker
         Model Model = Model.Instance();
 
         Random random = new Random();
-
-        public async Task CreateNewMap(string sourceFile)
+        
+        
+        public async Task CreateNewMap(string selectedMapPath)
         {
             // start with a clean .scm file
             // Select a unmodified .scm file
@@ -24,26 +22,55 @@ namespace MazeMaker
             // import the file .chk to the cloned .scm,
             // test the map in staredit and starcraft
 
+            
+
             Model.openTiles.Clear();
 
-            string fileName = Path.GetFileNameWithoutExtension(sourceFile);
+            string time_date = DateTime.Now.ToString("HH:mm:ss").Replace(":", "-");
 
-            string newPath = Path.GetDirectoryName(sourceFile);
+            const string internalCHKPath = @"staredit\scenario.chk";
 
-            string ext = Path.GetExtension(sourceFile);
+            string MapFolder = Path.GetDirectoryName(selectedMapPath);
 
-            string destFile = $@"{newPath}\{fileName}-cloned{ext}";
+            string MapName = Path.GetFileNameWithoutExtension(selectedMapPath);
 
-            File.Copy(sourceFile, destFile, true);
+            string Mapextension = Path.GetExtension(selectedMapPath);
 
-            bool success = WrapperMpq.ExportFile(destFile, @"staredit\scenario.chk", newPath);
+            string CloneMapPath = $@"{MapFolder}\{MapName}-cloned{Mapextension}";
 
-            string chkPath = $@"{newPath}\staredit\scenario.chk";
+            string chkPath = $@"{MapFolder}\{internalCHKPath}";
+
+            string NewMapPath = Environment.ExpandEnvironmentVariables(
+                $@"C:\Users\%USERNAME%\Documents\StarCraft\Maps\Download\Muestras\{MapName}-{time_date}{Mapextension}");
+
+
+            File.Copy(selectedMapPath, CloneMapPath, true);
+
+            WrapperMpq.ExportFile(CloneMapPath, internalCHKPath, MapFolder);
+
+            
+
+            
+
+            await modifyMap(chkPath);
+                        
+            WrapperMpq.DeleteFile(CloneMapPath, internalCHKPath);
+
+            WrapperMpq.ImportFile(CloneMapPath, chkPath);
+                        
+            File.Move(CloneMapPath, NewMapPath);
+            //C:\Users\loren\Documents\StarCraft\Maps\Download\Muestras
+        }
+
+        public async Task modifyMap(string chkPath)
+        {
+            int height;
+            int width;
 
             using (var fs = new FileStream(chkPath, FileMode.Open, FileAccess.ReadWrite))
             {
-                int width = mazeFunctions.mapWidth(fs);
-                int height = mazeFunctions.mapHeight(fs);
+                width = mazeFunctions.mapWidth(fs);
+                height = mazeFunctions.mapHeight(fs);
             }
 
             bool[,] maze = new bool[height, width];
@@ -52,10 +79,10 @@ namespace MazeMaker
                 maze, Model.openTiles, (width * height / 2), random, ref Model.blocksFilled, Model.Checked, width, height)), width, height);
 
             //MTXM broodwar reads, 0x04A2
-            success = BO.ByteArrayToFile(chkPath, BO.StringToByteArray(Model.Map),
+            BO.ByteArrayToFile(chkPath, BO.StringToByteArray(Model.Map),
              BO.findOffset(new byte[] { 0x4d, 0x54, 0x58, 0x4d }, chkPath));
-             //TILE staredit 0x24AA
-            success = BO.ByteArrayToFile(chkPath, BO.StringToByteArray(Model.Map),
+            //TILE staredit 0x24AA
+            BO.ByteArrayToFile(chkPath, BO.StringToByteArray(Model.Map),
              BO.findOffset(new byte[] { 0x54, 0x49, 0x4c, 0x45 }, chkPath));
 
             using (var fs = new FileStream(chkPath, FileMode.Open, FileAccess.ReadWrite))
@@ -64,18 +91,6 @@ namespace MazeMaker
                 mazeFunctions.updateLocations(fs, Model.openTiles, random);
 
             }
-
-            int success2 = WrapperMpq.DeleteFile(destFile, @"staredit\scenario.chk");
-
-            WrapperMpq.ImportFile(destFile, chkPath);
-
-            string time_date = DateTime.Now.ToString("HH:mm:ss").Replace(":", "-");
-
-            string destFilePath = Environment.ExpandEnvironmentVariables(
-                $@"C:\Users\%USERNAME%\Documents\StarCraft\Maps\Download\Muestras\{fileName}-{time_date}{ext}");
-
-            File.Move(destFile, destFilePath);
-            //C:\Users\loren\Documents\StarCraft\Maps\Download\Muestras
         }
 
     }
