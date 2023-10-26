@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+
 
 namespace MazeMaker
 {
@@ -48,12 +45,15 @@ namespace MazeMaker
                     }
                     if (completeMatch)
                     {
-                        return fs.Position - pattern.Count();//this returns the start position of the size. NOT the start position of the string pattern
+                        // This returns the start position of the size.
+                        // NOT the start position of the string pattern.
+                        return fs.Position - pattern.Count();
                     }
                 }
             }
             return offset;
         }
+        
         public static bool ByteArrayToFile(string path, byte[] byteArray, long offset)
         {
             try
