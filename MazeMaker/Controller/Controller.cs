@@ -110,5 +110,25 @@ namespace MazeMaker
                 }
             }
         }
+
+        public Tuple<string, string> SearchLabel(string FileName, string label)
+        {
+            using (var fs = new FileStream(FileName, FileMode.Open, FileAccess.ReadWrite))
+            {
+                string Address = "0x" + Convert.ToString(BO.findPattern(Encoding.ASCII.GetBytes(label), fs), 16).ToUpper(); ;
+                
+                // fs has its offSet moved to the end of the four bytes label,
+                // starting the other 4 bytes of the section size
+                // therefor there is no need to set the offset.
+                
+                int j = BO.readInt32(fs);
+                
+                string Value = j.ToString();
+
+                Tuple<string, string> t = new Tuple<string, string>(Address, Value);
+
+                return t;
+            }
+        }
     }
 }
