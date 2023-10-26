@@ -2,8 +2,6 @@
 using System.Windows.Forms;
 using System.ComponentModel.Design;
 using System.Drawing;
-using System.IO;
-using System.Text;
 
 
 namespace MazeMaker
@@ -18,17 +16,18 @@ namespace MazeMaker
         public Timer LoadingTimer = new Timer();
 
         // When something is waiting an async response use this
-        public bool waiting = false; 
-                       
+        public bool waiting = false;
+
         private ByteViewer byteviewer;
-                                      
+
         public Form1()
         {
             InitializeComponent();
 
             LoadingTimer.Tick += new EventHandler(TimerEventProcessor);
-            
+
         }
+
         private void loadByteViewer()
         {
             byteviewer = new ByteViewer();
@@ -37,8 +36,9 @@ namespace MazeMaker
             byteviewer.Anchor = AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Top;
             byteviewer.SetBytes(new byte[] { });
 
-            this.tabControl1.TabPages[2].Controls.Add(byteviewer);            
+            this.tabControl1.TabPages[2].Controls.Add(byteviewer);
         }
+
         private void TimerEventProcessor(Object myObject, EventArgs myEventArgs)
         {
             Timer myTimer = (Timer)myObject;
@@ -68,6 +68,7 @@ namespace MazeMaker
                 label9.Text = "Done";
             }
         }
+
         public void readyToWait(Button myButton)
         {
             waiting = true;
@@ -75,8 +76,9 @@ namespace MazeMaker
             myButton.Text = "Loading";
             myButton.Enabled = false;
             LoadingTimer.Interval = 500;
-            LoadingTimer.Start();            
+            LoadingTimer.Start();
         }
+
         public void doneWaiting(Button button, string previousBttnLabel)
         {
             waiting = false;
@@ -84,10 +86,12 @@ namespace MazeMaker
             button.Text = previousBttnLabel;
             button.Enabled = true;
         }
+
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             //bool close = SFmpq.SFileCloseArchive(hMPQ);
         }
+
         private void Form1_Load(object sender, EventArgs e)
         {
 
@@ -96,6 +100,7 @@ namespace MazeMaker
         private void button5_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Map Files(*.SCM;)|*.SCM;";
             if (ofd.ShowDialog() != DialogResult.OK)
                 return;
 
@@ -103,13 +108,14 @@ namespace MazeMaker
 
             byteviewer.SetFile(ofd.FileName);
         }
-        
+
         private async void button7_Click(object sender, EventArgs e)
         {
 
             Button myButton = (Button)sender;
             string label = myButton.Text;
             OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Map Files(*.SCM;)|*.SCM;";
             if (ofd.ShowDialog() != DialogResult.OK)
                 return;
 
@@ -130,6 +136,8 @@ namespace MazeMaker
         private void button1_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
+
+            ofd.Filter = "CHK Files(*.CHK;)|*.CHK;";
             if (ofd.ShowDialog() != DialogResult.OK)
                 return;
 
@@ -142,6 +150,7 @@ namespace MazeMaker
         private void button2_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "CHK Files(*.CHK;)|*.CHK;";
             if (ofd.ShowDialog() != DialogResult.OK)
                 return;
 
