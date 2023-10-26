@@ -64,27 +64,25 @@
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(6, 91);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(48, 13);
+            this.label9.Size = new System.Drawing.Size(0, 13);
             this.label9.TabIndex = 3;
-            this.label9.Text = "Loading!";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(6, 67);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(89, 13);
+            this.label1.Size = new System.Drawing.Size(0, 13);
             this.label1.TabIndex = 4;
-            this.label1.Text = "ProgressIndicator";
             // 
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
             this.checkBox1.Location = new System.Drawing.Point(6, 47);
             this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(102, 17);
+            this.checkBox1.Size = new System.Drawing.Size(140, 17);
             this.checkBox1.TabIndex = 5;
-            this.checkBox1.Text = "regionOrCorridor";
+            this.checkBox1.Text = "Region or Corridor Maze";
             this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // button7
