@@ -1,5 +1,4 @@
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Windows.Forms;
 using System.ComponentModel.Design;
 using System.Drawing;
@@ -20,16 +19,15 @@ namespace MazeMaker
 
         // When something is waiting an async response use this
         public bool waiting = false; 
-        
-        Random random = new Random();
-        
+                       
         private ByteViewer byteviewer;
                                       
         public Form1()
         {
-            LoadingTimer.Tick += new EventHandler(TimerEventProcessor);
             InitializeComponent();
-            //loadByteViewer();
+
+            LoadingTimer.Tick += new EventHandler(TimerEventProcessor);
+            
         }
         private void loadByteViewer()
         {
@@ -38,7 +36,8 @@ namespace MazeMaker
             byteviewer.Size = new Size(600, 338);
             byteviewer.Anchor = AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Top;
             byteviewer.SetBytes(new byte[] { });
-            this.Controls.Add(byteviewer);
+
+            this.tabControl1.TabPages[2].Controls.Add(byteviewer);            
         }
         private void TimerEventProcessor(Object myObject, EventArgs myEventArgs)
         {
@@ -87,7 +86,7 @@ namespace MazeMaker
         }
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            bool close = SFmpq.SFileCloseArchive(hMPQ);
+            //bool close = SFmpq.SFileCloseArchive(hMPQ);
         }
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -99,6 +98,9 @@ namespace MazeMaker
             OpenFileDialog ofd = new OpenFileDialog();
             if (ofd.ShowDialog() != DialogResult.OK)
                 return;
+
+            loadByteViewer();
+
             byteviewer.SetFile(ofd.FileName);
         }
         
@@ -130,13 +132,11 @@ namespace MazeMaker
             OpenFileDialog ofd = new OpenFileDialog();
             if (ofd.ShowDialog() != DialogResult.OK)
                 return;
-            using (var fs = new FileStream(ofd.FileName, FileMode.Open, FileAccess.ReadWrite))
-            {
-                textBox2.Text = "0x" + Convert.ToString((BO.findPattern(Encoding.ASCII.GetBytes(textBox1.Text), fs)), 16).ToUpper();
-                //fs has its offSet moved to the end of the four bytes label, starting the other 4bytes of the section size, no need to set the offset
-                int j = BO.readInt32(fs);
-                textBox3.Text = j.ToString();
-            }
+
+            Tuple<string, string>  t = Controller.SearchLabel(ofd.FileName, textBox1.Text);
+
+            textBox2.Text = t.Item1;
+            textBox3.Text = t.Item2;
         }
 
         private void button2_Click(object sender, EventArgs e)
