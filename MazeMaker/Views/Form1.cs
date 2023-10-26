@@ -156,7 +156,7 @@ namespace MazeMaker
 
             }
         }
-        private async void button7_Click(object sender, EventArgs e)//start with a clean .scm file
+        private async void button7_Click(object sender, EventArgs e)
         {
 
             Button myButton = (Button)sender;
@@ -173,7 +173,6 @@ namespace MazeMaker
             catch (Exception err)
             {
                 throw err;
-                //Console.WriteLine("failed creating map " + err.Message);
             }
             finally
             {

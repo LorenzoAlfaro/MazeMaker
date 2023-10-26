@@ -13,10 +13,9 @@ namespace MazeMaker
 
         Random random = new Random();
 
-        //int blocksFilled = 0;
-
         public async Task CreateNewMap(string sourceFile)
         {
+            // start with a clean .scm file
             // Select a unmodified .scm file
             // copy the file
             // extract the .chk file of the clone
@@ -41,24 +40,23 @@ namespace MazeMaker
 
             string chkPath = $@"{newPath}\staredit\scenario.chk";
 
-            int height;
-            int width;
-            
             using (var fs = new FileStream(chkPath, FileMode.Open, FileAccess.ReadWrite))
             {
-                width = mazeFunctions.mapWidth(fs);
-                height = mazeFunctions.mapHeight(fs);
+                int width = mazeFunctions.mapWidth(fs);
+                int height = mazeFunctions.mapHeight(fs);
             }
 
             bool[,] maze = new bool[height, width];
-            
+
             Model.Map = mazeFunctions.mazeToString(await Task.Run(() => mazeFunctions.startMazeAsync(
                 maze, Model.openTiles, (width * height / 2), random, ref Model.blocksFilled, Model.Checked, width, height)), width, height);
 
+            //MTXM broodwar reads, 0x04A2
             success = BO.ByteArrayToFile(chkPath, BO.StringToByteArray(Model.Map),
-             BO.findOffset(new byte[] { 0x4d, 0x54, 0x58, 0x4d }, chkPath));//MTXM broodwar reads, 0x04A2
+             BO.findOffset(new byte[] { 0x4d, 0x54, 0x58, 0x4d }, chkPath));
+             //TILE staredit 0x24AA
             success = BO.ByteArrayToFile(chkPath, BO.StringToByteArray(Model.Map),
-             BO.findOffset(new byte[] { 0x54, 0x49, 0x4c, 0x45 }, chkPath));//TILE staredit 0x24AA
+             BO.findOffset(new byte[] { 0x54, 0x49, 0x4c, 0x45 }, chkPath));
 
             using (var fs = new FileStream(chkPath, FileMode.Open, FileAccess.ReadWrite))
             {
@@ -68,7 +66,7 @@ namespace MazeMaker
             }
 
             int success2 = WrapperMpq.DeleteFile(destFile, @"staredit\scenario.chk");
-            
+
             WrapperMpq.ImportFile(destFile, chkPath);
 
             string time_date = DateTime.Now.ToString("HH:mm:ss").Replace(":", "-");
@@ -79,7 +77,6 @@ namespace MazeMaker
             File.Move(destFile, destFilePath);
             //C:\Users\loren\Documents\StarCraft\Maps\Download\Muestras
         }
-
 
     }
 }
