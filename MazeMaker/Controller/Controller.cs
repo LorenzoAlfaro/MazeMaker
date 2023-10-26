@@ -12,23 +12,14 @@ namespace MazeMaker
         
         
         public async Task CreateNewMap(string selectedMapPath)
-        {
-            // start with a clean .scm file
-            // Select a unmodified .scm file
-            // copy the file
-            // extract the .chk file of the clone
-            // delete the .chk file of the clone
-            // transfomr the .chk
-            // import the file .chk to the cloned .scm,
-            // test the map in staredit and starcraft
-
-            
-
+        {                       
             Model.openTiles.Clear();
 
             string time_date = DateTime.Now.ToString("HH:mm:ss").Replace(":", "-");
 
             const string internalCHKPath = @"staredit\scenario.chk";
+
+            const string StarCraftMaps = @"C:\Users\%USERNAME%\Documents\StarCraft\Maps\Download\Muestras";
 
             string MapFolder = Path.GetDirectoryName(selectedMapPath);
 
@@ -41,25 +32,20 @@ namespace MazeMaker
             string chkPath = $@"{MapFolder}\{internalCHKPath}";
 
             string NewMapPath = Environment.ExpandEnvironmentVariables(
-                $@"C:\Users\%USERNAME%\Documents\StarCraft\Maps\Download\Muestras\{MapName}-{time_date}{Mapextension}");
+                $@"{StarCraftMaps}\{MapName}-{time_date}{Mapextension}");
 
 
             File.Copy(selectedMapPath, CloneMapPath, true);
-
+            
             WrapperMpq.ExportFile(CloneMapPath, internalCHKPath, MapFolder);
-
-            
-
-            
-
+                        
             await modifyMap(chkPath);
                         
             WrapperMpq.DeleteFile(CloneMapPath, internalCHKPath);
 
             WrapperMpq.ImportFile(CloneMapPath, chkPath);
                         
-            File.Move(CloneMapPath, NewMapPath);
-            //C:\Users\loren\Documents\StarCraft\Maps\Download\Muestras
+            File.Move(CloneMapPath, NewMapPath);            
         }
 
         public async Task modifyMap(string chkPath)
@@ -89,9 +75,7 @@ namespace MazeMaker
             {
                 mazeFunctions.updateUnits(fs, Model.openTiles, random);
                 mazeFunctions.updateLocations(fs, Model.openTiles, random);
-
             }
         }
-
     }
 }
