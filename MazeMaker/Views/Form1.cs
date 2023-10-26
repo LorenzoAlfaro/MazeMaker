@@ -4,7 +4,6 @@ using System.Windows.Forms;
 using System.ComponentModel.Design;
 using System.Drawing;
 using System.IO;
-using System.Threading.Tasks;
 using System.Text;
 
 
@@ -95,7 +94,7 @@ namespace MazeMaker
 
         }
 
-        private void button5_Click(object sender, EventArgs e)//load byte viewer
+        private void button5_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
             if (ofd.ShowDialog() != DialogResult.OK)
@@ -146,33 +145,7 @@ namespace MazeMaker
             if (ofd.ShowDialog() != DialogResult.OK)
                 return;
 
-            List<Unit> Units = new List<Unit>();
-            using (var fs = new FileStream(ofd.FileName, FileMode.Open, FileAccess.ReadWrite))
-            {
-
-                BO.findPattern(Encoding.ASCII.GetBytes("UNIT"), fs);
-                int count = BO.readInt32(fs) / 36;
-
-                for (int i = 0; i < count; i++)
-                {
-                    Unit thisUnit = StarcraftObj.readUnit(fs);
-                    Units.Add(thisUnit);
-                }
-
-
-                for (short i = 0; i < count; i++)
-                {
-                    Units[i].x = (short)random.Next(2048);
-                    Units[i].y = (short)random.Next(2048);
-                    Console.WriteLine(Units[i].x.ToString());
-                }
-
-
-                for (int i = 0; i < count; i++)
-                {
-                    StarcraftObj.updateUnit(Units[i], fs);
-                }
-            }
+            Controller.FindUnits(ofd.FileName);
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace MazeMaker
@@ -75,6 +77,37 @@ namespace MazeMaker
             {
                 mazeFunctions.updateUnits(fs, Model.openTiles, random);
                 mazeFunctions.updateLocations(fs, Model.openTiles, random);
+            }
+        }
+
+        public void FindUnits(string FileName)
+        {            
+            List<Unit> Units = new List<Unit>();
+            using (var fs = new FileStream(FileName, FileMode.Open, FileAccess.ReadWrite))
+            {
+
+                BO.findPattern(Encoding.ASCII.GetBytes("UNIT"), fs);
+                int count = BO.readInt32(fs) / 36;
+
+                for (int i = 0; i < count; i++)
+                {
+                    Unit thisUnit = StarcraftObj.readUnit(fs);
+                    Units.Add(thisUnit);
+                }
+
+
+                for (short i = 0; i < count; i++)
+                {
+                    Units[i].x = (short)random.Next(2048);
+                    Units[i].y = (short)random.Next(2048);
+                    Console.WriteLine(Units[i].x.ToString());
+                }
+
+
+                for (int i = 0; i < count; i++)
+                {
+                    StarcraftObj.updateUnit(Units[i], fs);
+                }
             }
         }
     }
