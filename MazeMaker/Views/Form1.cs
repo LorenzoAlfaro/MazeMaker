@@ -91,7 +91,7 @@ namespace MazeMaker
         private void button5_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Map Files(*.SCM;)|*.SCM;";
+            ofd.Filter = "CHK Files(*.CHK;)|*.CHK;";
             if (ofd.ShowDialog() != DialogResult.OK)
                 return;
 
