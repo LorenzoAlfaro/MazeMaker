@@ -1,45 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MazeMaker
-{
-    public class Location
-    {
-        public int leftX; //u32
-        public int topY; //u32
-        public int rightX; //u32
-        public int bottY;
-        public Int16 stringNumber; //u16
-        public Int16 flags; //u16
-        public long offSet;
-        // Location is 20 bytes
-        // 4+4+4+4+2+2=20
-    }
-
-    public class Unit
-    {
-        public int instanceNum;
-        public Int16 x;//center of the unit
-        public Int16 y;
-        public Int16 ID;
-        public Int16 AddonNydus;
-        public Int16 Properties;
-        public Int16 mapProperties;
-        public Byte PlayerNumber;
-        public Byte HP;
-        public Byte Shield;
-        public Byte Energy;
-        public int ResourceAmount;
-        public Int16 unitHangar;
-        public Int16 unitFlags;
-        public int unused;
-        public int AddonNydusLink;
-        public long offSet;
-    }
+{        
     public static class mazeFunctions
     {
         public static Task<bool[,]> startMazeAsync(bool[,] maze, List<int[]> startWorm, int size, Random random,
