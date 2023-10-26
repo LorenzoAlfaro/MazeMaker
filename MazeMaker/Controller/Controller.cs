@@ -29,7 +29,7 @@ namespace MazeMaker
 
             string CloneMapPath = $@"{MapFolder}\{MapName}-cloned{Mapextension}";
 
-            string chkPath = $@"{MapFolder}\{internalCHKPath}";
+            string ExportedCHK = $@"{MapFolder}\{internalCHKPath}";
 
             string NewMapPath = Environment.ExpandEnvironmentVariables(
                 $@"{StarCraftMaps}\{MapName}-{time_date}{Mapextension}");
@@ -39,11 +39,11 @@ namespace MazeMaker
             
             WrapperMpq.ExportFile(CloneMapPath, internalCHKPath, MapFolder);
                         
-            await modifyMap(chkPath);
+            await modifyMap(ExportedCHK);
                         
             WrapperMpq.DeleteFile(CloneMapPath, internalCHKPath);
 
-            WrapperMpq.ImportFile(CloneMapPath, chkPath);
+            WrapperMpq.ImportFile(CloneMapPath, ExportedCHK);
                         
             File.Move(CloneMapPath, NewMapPath);            
         }
