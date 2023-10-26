@@ -51,6 +51,8 @@
     <Compile Include="Functions\BO.cs" />
     <Compile Include="Functions\SFmpq.cs" />
     <Compile Include="Models\Model.cs" />
+    <Compile Include="Models\StarCraftTypes\Location.cs" />
+    <Compile Include="Models\StarCraftTypes\Unit.cs" />
     <Compile Include="Views\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
