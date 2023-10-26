@@ -8,6 +8,14 @@ namespace MazeMaker
 {
     public partial class Form1 : Form
     {
+        public Form1()
+        {
+            InitializeComponent();
+
+            LoadingTimer.Tick += new EventHandler(TimerEventProcessor);
+
+        }
+        
         Controller Controller = new Controller();
 
         Model model = Model.Instance();
@@ -20,13 +28,6 @@ namespace MazeMaker
 
         private ByteViewer byteviewer;
 
-        public Form1()
-        {
-            InitializeComponent();
-
-            LoadingTimer.Tick += new EventHandler(TimerEventProcessor);
-
-        }
 
         private void loadByteViewer()
         {
@@ -86,17 +87,7 @@ namespace MazeMaker
             button.Text = previousBttnLabel;
             button.Enabled = true;
         }
-
-        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            //bool close = SFmpq.SFileCloseArchive(hMPQ);
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-
+        
         private void button5_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
@@ -133,6 +124,7 @@ namespace MazeMaker
                 doneWaiting(myButton, label);
             }
         }
+        
         private void button1_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
