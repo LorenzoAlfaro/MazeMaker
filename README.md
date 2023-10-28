@@ -32,9 +32,13 @@ And digging into old VB6 souce code. Yay!
 
 Some very crazy looking maps that are basically mazes.
 
-![maze2](https://github.com/LorenzoAlfaro/MazeMaker/assets/58958983/c98aa70b-18ba-4cdd-9c5e-373f8e6417fb)
+![image](https://github.com/LorenzoAlfaro/MazeMaker/assets/58958983/5d5cf652-5ff7-4518-abe6-bd2908ddc54b)
 
-![maze1](https://github.com/LorenzoAlfaro/MazeMaker/assets/58958983/647e8dd8-8b15-4b20-9f56-803a107964e6)
+![image](https://github.com/LorenzoAlfaro/MazeMaker/assets/58958983/f7b69a59-7111-415b-be65-524f1149dd1c)
+
+
+
+
 
 
 ## Installation
