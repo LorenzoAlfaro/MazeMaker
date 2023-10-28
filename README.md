@@ -37,6 +37,11 @@ Some very crazy looking maps that are basically mazes.
 ![maze1](https://github.com/LorenzoAlfaro/MazeMaker/assets/58958983/647e8dd8-8b15-4b20-9f56-803a107964e6)
 
 
+## Installation
+
+I'm hosting the installer for a ClickOnce application in my Azure Storage.
+[Download installer here](https://deploymentapps.z22.web.core.windows.net/MazeMaker/publish.htm)
+
 
 ## Acknowledgements
 FaRTy1billion from [startedit.net](http://www.staredit.net/)
