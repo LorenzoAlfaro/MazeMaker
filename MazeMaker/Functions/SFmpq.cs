@@ -429,12 +429,12 @@ namespace MazeMaker
 
         //' Storm functions implemented by this library
         //Declare Function SFileOpenArchive Lib "SFmpq.dll" (ByVal lpFileName As String, ByVal dwPriority As Long, ByVal dwFlags As Long, ByRef hMPQ As Long) As Boolean
-        [DllImport("SFmpq.dll", CharSet = CharSet.Unicode)]
+        [DllImport("bin/Release/SFmpq.dll", CharSet = CharSet.Unicode)]
         public static extern bool SFileOpenArchive(
             [MarshalAs(UnmanagedType.LPStr)]  string lpFileName, int dwPriority, int dwFlags, ref int hMPQ);
 
         //Declare Function SFileCloseArchive Lib "SFmpq.dll" (ByVal hMPQ As Long) As Boolean
-        [DllImport("SFmpq.dll", CharSet = CharSet.Unicode)]
+        [DllImport("bin/Release/SFmpq.dll", CharSet = CharSet.Unicode)]
         public static extern bool SFileCloseArchive(int hMPQ);
 
         //Declare Function SFileOpenFileAsArchive Lib "SFmpq.dll" (ByVal hSourceMPQ As Long, ByVal lpFileName As String, ByVal dwPriority As Long, ByVal dwFlags As Long, ByRef hMPQ As Long) As Boolean
@@ -450,15 +450,15 @@ namespace MazeMaker
         public static extern bool SFileOpenFile(string lpFileName, ref int hFile);
 
         //Declare Function SFileOpenFileEx Lib "SFmpq.dll" (ByVal hMPQ As Long, ByVal lpFileName As String, ByVal dwSearchScope As Long, ByRef hFile As Long) As Boolean
-        [DllImport("SFmpq.dll")]
+        [DllImport("bin/Release/SFmpq.dll")]
         public static extern bool SFileOpenFileEx(int hMPQ, [MarshalAs(UnmanagedType.LPStr)] string lpFileName, int dwSearchScope, ref int hFile);
 
         //Declare Function SFileCloseFile Lib "SFmpq.dll" (ByVal hFile As Long) As Boolean
-        [DllImport("SFmpq.dll")]
+        [DllImport("bin/Release/SFmpq.dll")]
         public static extern bool SFileCloseFile(int hFile);
 
         //Declare Function SFileGetFileSize Lib "SFmpq.dll" (ByVal hFile As Long, lpFileSizeHigh As Long) As Long
-        [DllImport("SFmpq.dll")]
+        [DllImport("bin/Release/SFmpq.dll")]
         public static extern int SFileGetFileSize(int hFile, int lpFileSizeHigh);
 
         //Declare Function SFileGetFileArchive Lib "SFmpq.dll" (ByVal hFile As Long, ByRef hMPQ As Long) As Boolean
@@ -473,11 +473,11 @@ namespace MazeMaker
         [DllImport("SFmpq.dll")]
         public static extern long SFileSetFilePointer(int hFile, long lDistanceToMove, long lplDistanceToMoveHigh, long dwMoveMethod);
         //Declare Function SFileReadFile Lib "SFmpq.dll" (ByVal hFile As Long, ByRef lpBuffer As Any, ByVal nNumberOfBytesToRead As Long, lpNumberOfBytesRead As Long, ByRef lpOverlapped As Any) As Boolean
-        [DllImport("SFmpq.dll")]
+        [DllImport("bin/Release/SFmpq.dll")]
         public static extern bool SFileReadFile(int hFile, byte[] lpBuffer,int nNumberOfBytesToRead,int lpNumberOfBytesRead, ref dynamic lpOverlapped);
 
         //Declare Function SFileSetLocale Lib "SFmpq.dll" (ByVal nNewLocale As Long) As Long
-        [DllImport("SFmpq.dll")]
+        [DllImport("bin/Release/SFmpq.dll")]
         public static extern int SFileSetLocale(int nNewLocale);
 
         //Declare Function SFileGetBasePath Lib "SFmpq.dll" (ByVal lpBuffer As String, ByVal dwBufferLength As Long) As Boolean
@@ -511,7 +511,7 @@ namespace MazeMaker
         public static extern long MpqOpenArchiveForUpdate(string lpFileName, long dwFlags, long dwMaximumFilesInArchive);
 
         //Declare Function MpqCloseUpdatedArchive Lib "SFmpq.dll" (ByVal hMPQ As Long, ByVal dwUnknown2 As Long) As Long
-        [DllImport("SFmpq.dll")]
+        [DllImport("bin/Release/SFmpq.dll")]
         public static extern int MpqCloseUpdatedArchive(int hMPQ, int dwUnknown2);
 
         //Declare Function MpqAddFileToArchive Lib "SFmpq.dll" (ByVal hMPQ As Long, ByVal lpSourceFileName As String, ByVal lpDestFileName As String, ByVal dwFlags As Long) As Boolean
@@ -519,7 +519,7 @@ namespace MazeMaker
         public static extern bool MpqAddFileToArchive(int hMPQ, string lpSourceFileName, string lpDestFileName, long dwFlags);
 
         //Declare Function MpqAddWaveToArchive Lib "SFmpq.dll" (ByVal hMPQ As Long, ByVal lpSourceFileName As String, ByVal lpDestFileName As String, ByVal dwFlags As Long, ByVal dwQuality As Long) As Boolean
-        [DllImport("SFmpq.dll", CharSet = CharSet.Unicode)]
+        [DllImport("bin/Release/SFmpq.dll", CharSet = CharSet.Unicode)]
         public static extern bool MpqAddWaveToArchive(int hMPQ, [MarshalAs(UnmanagedType.LPStr)] string lpSourceFileName, [MarshalAs(UnmanagedType.LPStr)] string lpDestFileName, int dwFlags, int dwQuality);
 
         //Declare Function MpqRenameFile Lib "SFmpq.dll" (ByVal hMPQ As Long, ByVal lpcOldFileName As String, ByVal lpcNewFileName As String) As Boolean
@@ -527,7 +527,7 @@ namespace MazeMaker
         public static extern bool MpqRenameFile(int hMPQ, string lpcOldFileName, string lpcNewFileName);
 
         //Declare Function MpqDeleteFile Lib "SFmpq.dll" (ByVal hMPQ As Long, ByVal lpFileName As String) As Boolean
-        [DllImport("SFmpq.dll", CharSet = CharSet.Unicode)]
+        [DllImport("bin/Release/SFmpq.dll", CharSet = CharSet.Unicode)]
         public static extern bool MpqDeleteFile(int hMPQ, [MarshalAs(UnmanagedType.LPStr)] string lpFileName);
 
         //Declare Function MpqCompactArchive Lib "SFmpq.dll" (ByVal hMPQ As Long) As Boolean
@@ -538,7 +538,7 @@ namespace MazeMaker
         //' Extra archive editing functions
 
         //Declare Function MpqOpenArchiveForUpdateEx Lib "SFmpq.dll" (ByVal lpFileName As String, ByVal dwFlags As Long, ByVal dwMaximumFilesInArchive As Long, ByVal dwBlockSize As Long) As Long
-        [DllImport("SFmpq.dll", CharSet = CharSet.Unicode)]
+        [DllImport("bin/Release/SFmpq.dll", CharSet = CharSet.Unicode)]
         public static extern int MpqOpenArchiveForUpdateEx(
             [MarshalAs(UnmanagedType.LPStr)] string lpFileName, int dwFlags,int dwMaximumFilesInArchive,int dwBlockSize);
 
