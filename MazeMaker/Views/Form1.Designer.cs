@@ -44,8 +44,8 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.textBox4 = new System.Windows.Forms.TextBox();
             this.button3 = new System.Windows.Forms.Button();
+            this.textBox4 = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -88,6 +88,7 @@
             this.checkBox1.TabIndex = 5;
             this.checkBox1.Text = "Region or Corridor Maze";
             this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.Visible = false;
             // 
             // button7
             // 
@@ -117,7 +118,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(158, 6);
+            this.button1.Location = new System.Drawing.Point(6, 6);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(146, 34);
             this.button1.TabIndex = 9;
@@ -135,12 +136,13 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(6, 6);
+            this.button2.Location = new System.Drawing.Point(158, 6);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(146, 34);
             this.button2.TabIndex = 11;
             this.button2.Text = "Find Units inside binary file";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Visible = false;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // tabControl1
@@ -207,13 +209,6 @@
             this.tabPage4.Text = "Settings";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
-            // textBox4
-            // 
-            this.textBox4.Location = new System.Drawing.Point(7, 7);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(544, 20);
-            this.textBox4.TabIndex = 0;
-            // 
             // button3
             // 
             this.button3.Location = new System.Drawing.Point(557, 6);
@@ -223,6 +218,13 @@
             this.button3.Text = "Save file path";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // textBox4
+            // 
+            this.textBox4.Location = new System.Drawing.Point(7, 7);
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(544, 20);
+            this.textBox4.TabIndex = 0;
             // 
             // Form1
             // 
