@@ -34,6 +34,8 @@ namespace MazeMaker
 
         public int blocksFilled = 0;
 
+        public string NewMapPath = @"C:\Users\%USERNAME%\Documents\StarCraft\Maps\Mazes";
+
 
     }
 }

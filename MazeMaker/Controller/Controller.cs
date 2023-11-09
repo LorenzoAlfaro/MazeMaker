@@ -11,17 +11,15 @@ namespace MazeMaker
         Model Model = Model.Instance();
 
         Random random = new Random();
-        
-        
+
+
         public async Task CreateNewMap(string selectedMapPath)
-        {                       
+        {
             Model.openTiles.Clear();
 
             string time_date = DateTime.Now.ToString("HH:mm:ss").Replace(":", "-");
 
             const string internalCHKPath = @"staredit\scenario.chk";
-
-            const string StarCraftMaps = @"C:\Users\%USERNAME%\Documents\StarCraft\Maps\Download\Muestras";
 
             string MapFolder = Path.GetDirectoryName(selectedMapPath);
 
@@ -31,23 +29,25 @@ namespace MazeMaker
 
             string CloneMapPath = $@"{MapFolder}\{MapName}-cloned{Mapextension}";
 
-            string ExportedCHK = $@"{MapFolder}\{internalCHKPath}";
+            string ExportedCHK = $@"{MapFolder}\scenario.chk";
 
             string NewMapPath = Environment.ExpandEnvironmentVariables(
-                $@"{StarCraftMaps}\{MapName}-{time_date}{Mapextension}");
+                $@"{Model.NewMapPath}\{MapName}-{time_date}{Mapextension}");
 
 
             File.Copy(selectedMapPath, CloneMapPath, true);
-            
+
             WrapperMpq.ExportFile(CloneMapPath, internalCHKPath, MapFolder);
-                        
+
             await modifyMap(ExportedCHK);
-                        
+
             WrapperMpq.DeleteFile(CloneMapPath, internalCHKPath);
 
             WrapperMpq.ImportFile(CloneMapPath, ExportedCHK);
-                        
-            File.Move(CloneMapPath, NewMapPath);            
+
+            Directory.CreateDirectory(Environment.ExpandEnvironmentVariables(Model.NewMapPath));
+
+            File.Move(CloneMapPath, NewMapPath);
         }
 
         public async Task modifyMap(string chkPath)
@@ -66,10 +66,10 @@ namespace MazeMaker
             Model.Map = mazeFunctions.mazeToString(await Task.Run(() => mazeFunctions.startMazeAsync(
                 maze, Model.openTiles, (width * height / 2), random, ref Model.blocksFilled, Model.Checked, width, height)), width, height);
 
-            //MTXM broodwar reads, 0x04A2
+            // MTXM broodwar reads, 0x04A2
             BO.ByteArrayToFile(chkPath, BO.StringToByteArray(Model.Map),
              BO.findOffset(new byte[] { 0x4d, 0x54, 0x58, 0x4d }, chkPath));
-            //TILE staredit 0x24AA
+            // TILE staredit 0x24AA
             BO.ByteArrayToFile(chkPath, BO.StringToByteArray(Model.Map),
              BO.findOffset(new byte[] { 0x54, 0x49, 0x4c, 0x45 }, chkPath));
 
@@ -81,7 +81,7 @@ namespace MazeMaker
         }
 
         public void FindUnits(string FileName)
-        {            
+        {
             List<Unit> Units = new List<Unit>();
             using (var fs = new FileStream(FileName, FileMode.Open, FileAccess.ReadWrite))
             {
@@ -115,14 +115,14 @@ namespace MazeMaker
         {
             using (var fs = new FileStream(FileName, FileMode.Open, FileAccess.ReadWrite))
             {
-                string Address = "0x" + Convert.ToString(BO.findPattern(Encoding.ASCII.GetBytes(label), fs), 16).ToUpper(); ;
-                
+                string Address = "0x" + Convert.ToString(BO.findPattern(Encoding.ASCII.GetBytes(label), fs), 16).ToUpper();
+
                 // fs has its offSet moved to the end of the four bytes label,
                 // starting the other 4 bytes of the section size
-                // therefor there is no need to set the offset.
-                
+                // therefore there is no need to set the offset.
+
                 int j = BO.readInt32(fs);
-                
+
                 string Value = j.ToString();
 
                 Tuple<string, string> t = new Tuple<string, string>(Address, Value);

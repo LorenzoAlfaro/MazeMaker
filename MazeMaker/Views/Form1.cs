@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using System.ComponentModel.Design;
 using System.Drawing;
-
+using System.Reflection;
 
 namespace MazeMaker
 {
@@ -37,7 +37,7 @@ namespace MazeMaker
             byteviewer.Anchor = AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Top;
             byteviewer.SetBytes(new byte[] { });
 
-            this.tabControl1.TabPages[2].Controls.Add(byteviewer);
+            tabControl1.TabPages[2].Controls.Add(byteviewer);
         }
 
         private void TimerEventProcessor(Object myObject, EventArgs myEventArgs)
@@ -73,7 +73,7 @@ namespace MazeMaker
         public void readyToWait(Button myButton)
         {
             waiting = true;
-            this.Cursor = Cursors.WaitCursor;
+            Cursor = Cursors.WaitCursor;
             myButton.Text = "Loading";
             myButton.Enabled = false;
             LoadingTimer.Interval = 500;
@@ -83,7 +83,7 @@ namespace MazeMaker
         public void doneWaiting(Button button, string previousBttnLabel)
         {
             waiting = false;
-            this.Cursor = Cursors.Default;
+            Cursor = Cursors.Default;
             button.Text = previousBttnLabel;
             button.Enabled = true;
         }
@@ -147,6 +147,36 @@ namespace MazeMaker
                 return;
 
             Controller.FindUnits(ofd.FileName);
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+
+            if (fbd.ShowDialog() != DialogResult.OK)
+                return;
+
+            model.NewMapPath = fbd.SelectedPath;
+
+            Form1_Load(sender, e);
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            this.Text += $" {version()}";
+            textBox4.Text = model.NewMapPath;
+        }
+
+        private string version()
+        {
+            try
+            {
+                return System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString();
+            }
+            catch (Exception ex)
+            {
+                return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            }
         }
     }
 }
