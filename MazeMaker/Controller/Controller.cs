@@ -45,6 +45,8 @@ namespace MazeMaker
 
             WrapperMpq.ImportFile(CloneMapPath, ExportedCHK);
 
+            Directory.CreateDirectory(Environment.ExpandEnvironmentVariables(Model.NewMapPath));
+
             File.Move(CloneMapPath, NewMapPath);
         }
 
