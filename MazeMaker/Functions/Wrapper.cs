@@ -48,7 +48,7 @@ namespace MazeMaker
                 return false;
             }
 
-            sGetFile(hMPQ, extractedFile, saveFilePath, 1);
+            sGetFile(hMPQ, extractedFile, saveFilePath, 0);
 
             SFmpq.SFileCloseArchive(hMPQ);
 

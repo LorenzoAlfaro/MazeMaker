@@ -29,7 +29,7 @@ namespace MazeMaker
 
             string CloneMapPath = $@"{MapFolder}\{MapName}-cloned{Mapextension}";
 
-            string ExportedCHK = $@"{MapFolder}\{internalCHKPath}";
+            string ExportedCHK = $@"{MapFolder}\scenario.chk";
 
             string NewMapPath = Environment.ExpandEnvironmentVariables(
                 $@"{Model.NewMapPath}\{MapName}-{time_date}{Mapextension}");
