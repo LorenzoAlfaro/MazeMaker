@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using System.ComponentModel.Design;
 using System.Drawing;
-
+using System.Reflection;
 
 namespace MazeMaker
 {
@@ -163,7 +163,20 @@ namespace MazeMaker
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            this.Text += $" {version()}";
             textBox4.Text = model.NewMapPath;
+        }
+
+        private string version()
+        {
+            try
+            {
+                return System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString();
+            }
+            catch (Exception ex)
+            {
+                return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            }
         }
     }
 }
